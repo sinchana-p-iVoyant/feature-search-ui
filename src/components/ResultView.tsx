@@ -10,11 +10,11 @@ import './Result.css'
 interface DataType {
   key: string;
   name: string;
-  phone: string;
+  phone?: string;
   addressLn1: string;
   city: string;
   country: string;
-  partType: string;
+  partyType: string;
   rlCd: string;
   state: string;
   zip: string;
@@ -68,9 +68,9 @@ interface DataType {
       // ...getColumnSearchProps('age'),
     },
     {
-      title: 'Part Type',
-      dataIndex: 'partType',
-      key: 'partType',
+      title: 'Party Type',
+      dataIndex: 'partyType',
+      key: 'partyType',
       // width: '20%',
       // ...getColumnSearchProps('age'),
     },
@@ -112,7 +112,7 @@ const data: DataType[] = [
     addressLn1 : 'abc',
     city: "FAIR LAWN",
     country: "US",
-    partType: 'ShipTo',
+    partyType: 'ShipTo',
     rlCd: "Intended Delivery Location-Pkg Addr",
     state: "NJ",
     zip: "07410",
@@ -124,7 +124,7 @@ const data: DataType[] = [
     addressLn1 : '11500 80TH avenue',
     city: "PLEASANT PRAIRIE",
     country: "US",
-    partType: 'ShipFrom',
+    partyType: 'ShipFrom',
     rlCd: "Intended Delivery Location-Pkg Addr",
     state: "WI",
     zip: "531582909",
@@ -136,7 +136,7 @@ const data: DataType[] = [
     addressLn1 : 'abc',
     city: "FAIR LAWN",
     country: "US",
-    partType: 'ShipTo',
+    partyType: 'ShipTo',
     rlCd: "Intended Delivery Location-Pkg Addr",
     state: "NJ",
     zip: "07410",
@@ -148,7 +148,7 @@ const data: DataType[] = [
     addressLn1 : '11500 80TH avenue',
     city: "PLEASANT PRAIRIE",
     country: "US",
-    partType: 'ShipFrom',
+    partyType: 'ShipFrom',
     rlCd: "Intended Delivery Location-Pkg Addr",
     state: "WI",
     zip: "531582909",
@@ -160,7 +160,7 @@ const data: DataType[] = [
     addressLn1 : 'abc',
     city: "FAIR LAWN",
     country: "US",
-    partType: 'ShipTo',
+    partyType: 'ShipTo',
     rlCd: "Intended Delivery Location-Pkg Addr",
     state: "NJ",
     zip: "07410",
@@ -172,7 +172,7 @@ const data: DataType[] = [
     addressLn1 : '11500 80TH avenue',
     city: "PLEASANT PRAIRIE",
     country: "US",
-    partType: 'ShipFrom',
+    partyType: 'ShipFrom',
     rlCd: "Intended Delivery Location-Pkg Addr",
     state: "WI",
     zip: "531582909",
@@ -188,11 +188,12 @@ interface ResultViewProps {
 export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => {
   console.log(receiverOfItemArray)
   
+  let filteredData = []
+  let result
   
   if (receiverOfItemArray) {
     setTimeout(() => {
       
-    let filteredData = []
 
     receiverOfItemArray.forEach((item) => {
       item.receiverOfItem.shipmentData.forEach((sd) => {
@@ -200,17 +201,22 @@ export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray }) =
       });
     });
 
-    console.log(filteredData)
+      console.log(filteredData)
+      
     }, 3000)
   }
 
   const [table, setTable] = useState('table')
 
-  let result
 
   switch (table) {
+    // case 'table':
+    //   result = setTimeout(() => {
+    //     return  <Table columns = { columns } dataSource = { filteredData } pagination = { false} />
+    //   }, 1000)
+    //   break;
     case 'table':
-      result = <Table columns={columns} dataSource={data} pagination={false} />
+      result = <Table columns = { columns } dataSource = { data } pagination = { false} />
       break;
     case 'json':
       result = <MonacoEditor
