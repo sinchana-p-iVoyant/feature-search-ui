@@ -18,10 +18,6 @@ export const SearchView = ({ onSearch }) => {
         console.log(searchTwo)
     };
 
-    // const onSearch = (value: string) => {
-    //     console.log('search:', value);
-    // };
-
     const handleSearch = () => {
         onSearch(searchOne, searchTwo);
     };
@@ -55,9 +51,7 @@ export const SearchView = ({ onSearch }) => {
             label: 'Account Number',
         },
     ]
-
-  
-//   console.log(useGetSearchedDataQuery());
+    
 
   return (
     <div className='inputs-container'>
@@ -81,7 +75,6 @@ export const SearchView = ({ onSearch }) => {
               )
           }
     
-          <Switch className='toggle' checkedChildren='TABLE' unCheckedChildren='JSON' defaultChecked />
     </div>
   )
 }

@@ -188,9 +188,11 @@ function App() {
 
 
   return (
-    <div>
+    <div className='app-container'>
       <SearchView onSearch={handleSearch} />
-      <ResultView receiverOfItemArray={receiverOfItemArray} />
+      {
+        isSuccess && <ResultView receiverOfItemArray={receiverOfItemArray} />
+      }
       
     </div>
   )
