@@ -1,0 +1,197 @@
+{
+    "searchData" : [
+    {
+    "statusCode": 200,
+    "statusMessage": "Success",
+    "exactMatch": [
+        {
+            "customerC360Id": "e60b49ab-ce1f-40a2-8462-0d20c5b1c54f",
+            "name": "stephan ridel",
+            "addressLn1": "123 west abc street",
+            "city": "fair lawn",
+            "state": "nj",
+            "country": "us",
+            "zip": "07410",
+            "receiverOf": [
+                {
+                    "trackingId": "1Z1R054E0337093949Steven",
+                    "shipmentData": [
+                        {
+                            "partyType": "ShipTo",
+                            "name": "STEVEN RIDEL",
+                            "addressLn1": "123 WEST ABC street",
+                            "city": "FAIR LAWN",
+                            "state": "NJ",
+                            "country": "US",
+                            "zip": "07410",
+                            "adTknNr": "55fc5db299824e5798c0ee440f2a7784",
+                            "rlCd": "Intended Delivery Location-Pkg Addr"
+                        },
+                        {
+                            "partyType": "ShipFrom",
+                            "name": "CONVERSE",
+                            "addressLn1": "11500 80TH avenue",
+                            "city": "PLEASANT PRAIRIE",
+                            "state": "WI",
+                            "country": "US",
+                            "zip": "531582909",
+                            "phone": "0000000000",
+                            "rlCd": "Shipper Location"
+                        }
+                    ]
+                },
+                {
+                    "trackingId": "1Z1R054E0337093949Stevn",
+                    "shipmentData": [
+                        {
+                            "partyType": "ShipTo",
+                            "name": "STEVN RIDEL",
+                            "addressLn1": "123 WEST ABC street",
+                            "city": "FAIR LAWN",
+                            "state": "NJ",
+                            "country": "US",
+                            "zip": "07410",
+                            "adTknNr": "55fc5db299824e5798c0ee440f2a7784",
+                            "rlCd": "Intended Delivery Location-Pkg Addr"
+                        },
+                        {
+                            "partyType": "ShipFrom",
+                            "name": "CONVERSE",
+                            "addressLn1": "11500 80TH avenue",
+                            "city": "PLEASANT PRAIRIE",
+                            "state": "WI",
+                            "country": "US",
+                            "zip": "531582909",
+                            "phone": "0000000000",
+                            "rlCd": "Shipper Location"
+                        }
+                    ]
+                },
+                {
+                    "trackingId": "1Z1R054E0337093949Stephan",
+                    "shipmentData": [
+                        {
+                            "partyType": "ShipTo",
+                            "name": "STEPHAN RIDEL",
+                            "addressLn1": "123 WEST ABC street",
+                            "city": "FAIR LAWN",
+                            "state": "NJ",
+                            "country": "US",
+                            "zip": "07410",
+                            "adTknNr": "55fc5db299824e5798c0ee440f2a7784",
+                            "rlCd": "Intended Delivery Location-Pkg Addr"
+                        },
+                        {
+                            "partyType": "ShipFrom",
+                            "name": "CONVERSE",
+                            "addressLn1": "11500 80TH avenue",
+                            "city": "PLEASANT PRAIRIE",
+                            "state": "WI",
+                            "country": "US",
+                            "zip": "531582909",
+                            "phone": "0000000000",
+                            "rlCd": "Shipper Location"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "likelyMatch": [
+        {
+            "customerC360Id": "e60b49ab-ce1f-40a2-8462-0d20c5b1c54f",
+            "name": "stephan ridel",
+            "addressLn1": "123 west abc street",
+            "city": "fair lawn",
+            "state": "nj",
+            "country": "us",
+            "zip": "07410",
+            "receiverOf": [
+                {
+                    "trackingId": "1Z1R054E0337093949Steven",
+                    "shipmentData": [
+                        {
+                            "partyType": "ShipTo",
+                            "name": "STEVEN RIDEL",
+                            "addressLn1": "123 WEST ABC street",
+                            "city": "FAIR LAWN",
+                            "state": "NJ",
+                            "country": "US",
+                            "zip": "07410",
+                            "adTknNr": "55fc5db299824e5798c0ee440f2a7784",
+                            "rlCd": "Intended Delivery Location-Pkg Addr"
+                        },
+                        {
+                            "partyType": "ShipFrom",
+                            "name": "CONVERSE",
+                            "addressLn1": "11500 80TH avenue",
+                            "city": "PLEASANT PRAIRIE",
+                            "state": "WI",
+                            "country": "US",
+                            "zip": "531582909",
+                            "phone": "0000000000",
+                            "rlCd": "Shipper Location"
+                        }
+                    ]
+                },
+                {
+                    "trackingId": "1Z1R054E0337093949Stevn",
+                    "shipmentData": [
+                        {
+                            "partyType": "ShipTo",
+                            "name": "STEVN RIDEL",
+                            "addressLn1": "123 WEST ABC street",
+                            "city": "FAIR LAWN",
+                            "state": "NJ",
+                            "country": "US",
+                            "zip": "07410",
+                            "adTknNr": "55fc5db299824e5798c0ee440f2a7784",
+                            "rlCd": "Intended Delivery Location-Pkg Addr"
+                        },
+                        {
+                            "partyType": "ShipFrom",
+                            "name": "CONVERSE",
+                            "addressLn1": "11500 80TH avenue",
+                            "city": "PLEASANT PRAIRIE",
+                            "state": "WI",
+                            "country": "US",
+                            "zip": "531582909",
+                            "phone": "0000000000",
+                            "rlCd": "Shipper Location"
+                        }
+                    ]
+                },
+                {
+                    "trackingId": "1Z1R054E0337093949Stephan",
+                    "shipmentData": [
+                        {
+                            "partyType": "ShipTo",
+                            "name": "STEPHAN RIDEL",
+                            "addressLn1": "123 WEST ABC street",
+                            "city": "FAIR LAWN",
+                            "state": "NJ",
+                            "country": "US",
+                            "zip": "07410",
+                            "adTknNr": "55fc5db299824e5798c0ee440f2a7784",
+                            "rlCd": "Intended Delivery Location-Pkg Addr"
+                        },
+                        {
+                            "partyType": "ShipFrom",
+                            "name": "CONVERSE",
+                            "addressLn1": "11500 80TH avenue",
+                            "city": "PLEASANT PRAIRIE",
+                            "state": "WI",
+                            "country": "US",
+                            "zip": "531582909",
+                            "phone": "0000000000",
+                            "rlCd": "Shipper Location"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+    }
+
+    ]
+}
