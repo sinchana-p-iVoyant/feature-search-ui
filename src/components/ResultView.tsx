@@ -1,18 +1,20 @@
-import React from 'react'
-import { Button, Input, Space, Table } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { Button, Space, Table, Switch, Input } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import { ShipmentDataItem, ReceiverOfItem, ExactMatchItem, SearchDataItem, ResultObject } from '../App'
+import MonacoEditor from 'react-monaco-editor';
+import jsonData from '../../data/db.json'
 
 import './Result.css'
 
 interface DataType {
   key: string;
   name: string;
-  phone: string;
+  phone?: string;
   addressLn1: string;
   city: string;
   country: string;
-  partType: string;
+  partyType: string;
   rlCd: string;
   state: string;
   zip: string;
@@ -23,7 +25,7 @@ interface DataType {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Sl.No',
+      title: 'No.',
       dataIndex: 'key',
       key: 'name',
       // width: '30%',
@@ -66,16 +68,9 @@ interface DataType {
       // ...getColumnSearchProps('age'),
     },
     {
-      title: 'Part Type',
-      dataIndex: 'partType',
-      key: 'partType',
-      // width: '20%',
-      // ...getColumnSearchProps('age'),
-    },
-    {
-      title: 'Phone',
-      dataIndex: 'phone',
-      key: 'phone',
+      title: 'Party Type',
+      dataIndex: 'partyType',
+      key: 'partyType',
       // width: '20%',
       // ...getColumnSearchProps('age'),
     },
@@ -102,93 +97,147 @@ interface DataType {
     }
 ];
   
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    phone: '9999',
-    addressLn1 : 'abc',
-    city: "FAIR LAWN",
-    country: "US",
-    partType: 'ShipTo',
-    rlCd: "Intended Delivery Location-Pkg Addr",
-    state: "NJ",
-    zip: "07410",
-  },
-  {
-    key: '2',
-    name: 'CONVERSE',
-    phone: '0000000000',
-    addressLn1 : '11500 80TH avenue',
-    city: "PLEASANT PRAIRIE",
-    country: "US",
-    partType: 'ShipFrom',
-    rlCd: "Intended Delivery Location-Pkg Addr",
-    state: "WI",
-    zip: "531582909",
-  },
-  {
-    key: '3',
-    name: 'John Brown',
-    phone: '9999',
-    addressLn1 : 'abc',
-    city: "FAIR LAWN",
-    country: "US",
-    partType: 'ShipTo',
-    rlCd: "Intended Delivery Location-Pkg Addr",
-    state: "NJ",
-    zip: "07410",
-  },
-  {
-    key: '4',
-    name: 'CONVERSE',
-    phone: '0000000000',
-    addressLn1 : '11500 80TH avenue',
-    city: "PLEASANT PRAIRIE",
-    country: "US",
-    partType: 'ShipFrom',
-    rlCd: "Intended Delivery Location-Pkg Addr",
-    state: "WI",
-    zip: "531582909",
-  },
-  {
-    key: '5',
-    name: 'John Brown',
-    phone: '9999',
-    addressLn1 : 'abc',
-    city: "FAIR LAWN",
-    country: "US",
-    partType: 'ShipTo',
-    rlCd: "Intended Delivery Location-Pkg Addr",
-    state: "NJ",
-    zip: "07410",
-  },
-  {
-    key: '6',
-    name: 'CONVERSE',
-    phone: '0000000000',
-    addressLn1 : '11500 80TH avenue',
-    city: "PLEASANT PRAIRIE",
-    country: "US",
-    partType: 'ShipFrom',
-    rlCd: "Intended Delivery Location-Pkg Addr",
-    state: "WI",
-    zip: "531582909",
-  },
-];
+// const data: DataType[] = [
+//   {
+//     key: '1',
+//     name: 'John Brown',
+//     phone: '9999',
+//     addressLn1 : 'abc',
+//     city: "FAIR LAWN",
+//     country: "US",
+//     partyType: 'ShipTo',
+//     rlCd: "Intended Delivery Location-Pkg Addr",
+//     state: "NJ",
+//     zip: "07410",
+//   },
+//   {
+//     key: '2',
+//     name: 'CONVERSE',
+//     phone: '0000000000',
+//     addressLn1 : '11500 80TH avenue',
+//     city: "PLEASANT PRAIRIE",
+//     country: "US",
+//     partyType: 'ShipFrom',
+//     rlCd: "Intended Delivery Location-Pkg Addr",
+//     state: "WI",
+//     zip: "531582909",
+//   },
+//   {
+//     key: '3',
+//     name: 'John Brown',
+//     phone: '9999',
+//     addressLn1 : 'abc',
+//     city: "FAIR LAWN",
+//     country: "US",
+//     partyType: 'ShipTo',
+//     rlCd: "Intended Delivery Location-Pkg Addr",
+//     state: "NJ",
+//     zip: "07410",
+//   },
+//   {
+//     key: '4',
+//     name: 'CONVERSE',
+//     phone: '0000000000',
+//     addressLn1 : '11500 80TH avenue',
+//     city: "PLEASANT PRAIRIE",
+//     country: "US",
+//     partyType: 'ShipFrom',
+//     rlCd: "Intended Delivery Location-Pkg Addr",
+//     state: "WI",
+//     zip: "531582909",
+//   },
+//   {
+//     key: '5',
+//     name: 'John Brown',
+//     phone: '9999',
+//     addressLn1 : 'abc',
+//     city: "FAIR LAWN",
+//     country: "US",
+//     partyType: 'ShipTo',
+//     rlCd: "Intended Delivery Location-Pkg Addr",
+//     state: "NJ",
+//     zip: "07410",
+//   },
+//   {
+//     key: '6',
+//     name: 'CONVERSE',
+//     phone: '0000000000',
+//     addressLn1 : '11500 80TH avenue',
+//     city: "PLEASANT PRAIRIE",
+//     country: "US",
+//     partyType: 'ShipFrom',
+//     rlCd: "Intended Delivery Location-Pkg Addr",
+//     state: "WI",
+//     zip: "531582909",
+//   },
+// ];
+
+
 
 interface ResultViewProps {
   receiverOfItemArray: ResultObject[];
 }
 
-export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => {
-  console.log(receiverOfItemArray)
 
+export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray, searchQuery }) => {
+  const [filteredData, setFilteredData] = useState<DataType[]>([]);
+  const [table, setTable] = useState('table');
+
+  useEffect(() => {
+    let count = 0;
+    if (receiverOfItemArray) {
+      const data:ShipmentDataItem[] = [];
+      receiverOfItemArray.forEach((item, i) => {
+        item.receiverOfItem.shipmentData.forEach((sd, j) => {
+          count++
+          data.push({...sd, key: count});
+        });
+      });
+
+      // Set the filteredData state once the data is ready
+      setFilteredData(data);
+      console.log("data:\n")
+      console.log(filteredData)
+    }
+  }, [receiverOfItemArray, searchQuery]);
+
+  let result;
+
+  switch (table) {
+    case 'table':
+      result = <Table columns={columns} dataSource={filteredData} pagination={false} />;
+      break;
+    case 'json':
+      result = (
+        <MonacoEditor
+          height="650"
+          language="json"
+          theme="vs-dark"
+          value={JSON.stringify(jsonData, null, 2)}
+          options={{
+            selectOnLineNumbers: true,
+          }}
+        />
+      );
+      break;
+    default:
+      break;
+  }
 
   return (
     <div className='result-container'>
-      <p className='match-count'>Customer Match- Total Records found (6)</p>
-      <Table columns={columns} dataSource={data} pagination={false}/>
+      <div className='text-btn-container'>
+        <h4>Customer Match | <span>Total Records found (6)</span></h4>
+        <div className='toggle-container'>
+          <div className={table === 'table' ? `active` : ``} onClick={() => setTable('table')}>Table View</div>
+          <div className={table === 'json' ? `active` : ``} onClick={() => setTable('json')}>JSON View</div>
+        </div>
+      </div>
+      
+      {result}
     </div>
-  )
-}
+  );
+};
+
+
+

@@ -117,6 +117,7 @@ export interface ResultObject {
 
 function App() {
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [data, setData] = useState(['']); 
   const [searchResults, setSearchResults] = useState([]);
 
@@ -130,67 +131,48 @@ function App() {
 
   const receiverOfItemArray: ResultObject[] = [];
 
-    useEffect(() => {
-      if (isSuccess) {
-        console.log('Data loaded:', searchData);
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('Data loaded:', searchData);
 
-        searchData.forEach((item: SearchDataItem, firstIndex: number) => {
-          item.exactMatch.forEach((exactMatchItem: ExactMatchItem, exactMatchIndex: number) => {
-            exactMatchItem.receiverOf.forEach((receiverOfItem: ReceiverOfItem, receiverOfIndex: number) => {
-              const resultObject: ResultObject = {
-                  receiverOfItem
-              };
-              receiverOfItemArray.push(resultObject);
-            });
+      searchData.forEach((item: SearchDataItem, firstIndex: number) => {
+        item.exactMatch.forEach((exactMatchItem: ExactMatchItem, exactMatchIndex: number) => {
+          exactMatchItem.receiverOf.forEach((receiverOfItem: ReceiverOfItem, receiverOfIndex: number) => {
+            const resultObject: ResultObject = {
+                receiverOfItem
+            };
+            receiverOfItemArray.push(resultObject);
           });
         });
+      });
+      
+      console.log(receiverOfItemArray);
 
-        console.log(receiverOfItemArray);
-
-      } else if (isError) {
-        console.error('Error loading data:', error);
-      }
-    }, [isSuccess, isError, searchData, error]);
+    } else if (isError) {
+      console.error('Error loading data:', error);
+    }
+  }, [isSuccess, isError, searchData, error]);
 
   console.log(searchData)
 
   
-  const handleSearch = (searchOne: string, searchTwo: string) => {
-
-    const filteredResults = data.filter((item) => {
-      const searchTerm = searchTwo.toLowerCase(); // will have either 'phone' or 'address' or 'email' or 'accountNbr'
-
-      if (searchOne === 'name') {
-
-        const nameMatches = item.name.toLowerCase().includes(searchTerm);
-
-        switch (searchTwo) {
-          case 'phone':
-            return nameMatches || item.phone.toLowerCase().includes(searchTerm);
-          case 'email':
-            return nameMatches || item.email.toLowerCase().includes(searchTerm);
-          case 'address':
-            return nameMatches || item.address.toLowerCase().includes(searchTerm);
-          case 'accountNbr':
-            return nameMatches || item.accountNbr.toLowerCase().includes(searchTerm);
-          default:
-            return nameMatches;
-          
-        }
-      } else if (searchOne === 'shipperUserId') {
-        return item.shipperUserId.toLowerCase().includes(searchTerm);
-      }
-      return false; 
-    });
-
-    setSearchResults(filteredResults);
+  const handleSearch = (query) => {
+      const filteredResults = searchData.filter((item, i) => {
+        return Object.values(item).some((value) =>
+          value ? value.toString().toLowerCase().includes(query.toLowerCase()) : false
+        );
+      });
+    
+      setSearchQuery(query);
+      setSearchResults(filteredResults);
   };
 
-
   return (
-    <div>
+    <div className='app-container'>
       <SearchView onSearch={handleSearch} />
-      <ResultView receiverOfItemArray={receiverOfItemArray} />
+      {
+        isSuccess && <ResultView receiverOfItemArray={receiverOfItemArray} searchQuery={searchQuery}/>
+      }
       
     </div>
   )
