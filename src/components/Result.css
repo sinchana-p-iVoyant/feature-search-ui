@@ -1,0 +1,11 @@
+.result-container {
+  padding: 0px 80px;
+}
+.match-count {
+  color: rgba(0, 0, 0, 0.81);
+  font-family: 'Poppins';
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}

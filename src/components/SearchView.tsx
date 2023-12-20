@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import { Select, Switch } from 'antd';
+import { Select, Switch, Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons'
+import './Search.css'
 
 export const SearchView = ({ onSearch }) => {
     const [searchOne, setSearchOne] = useState('')
@@ -58,27 +60,41 @@ export const SearchView = ({ onSearch }) => {
 //   console.log(useGetSearchedDataQuery());
 
   return (
-    <div>
-        <Select
+    <div className='inputs-container'>
+          <Select
+            className='select-box'
             showSearch
-            placeholder="Select..."
+            placeholder="Search by:"
             optionFilterProp="children"
             onChange={onChangeOne}
             onSearch={onSearch}
             // filterOption={filterOption}
             options={firstSearchOptions}
-        />
-        <Select
-            showSearch={searchOne !== 'shipperUserId'}
-            disabled={searchOne === 'shipperUserId'}
-            placeholder="Select..."
-            optionFilterProp="children"
-            onChange={onChangeTwo}
-            onSearch={onSearch}
-            // filterOption={filterOption}
-            options={secondSearchOptions}
           />
-          <Switch checkedChildren='JSON' unCheckedChildren='Table' defaultChecked />
+
+          {
+              searchOne === 'shipperUserId' ? (
+                <Input disabled className='input' placeholder="Search by email, phone number, address, account number" prefix={<SearchOutlined />} />
+              ) : (
+                <Input className='input' placeholder="Search by email, phone number, address, account number" prefix={<SearchOutlined />} />
+     
+              )
+          }
+    
+          <Switch className='toggle' checkedChildren='TABLE' unCheckedChildren='JSON' defaultChecked />
     </div>
   )
 }
+
+
+//    {/* <Select
+//             showSearch={searchOne !== 'shipperUserId'}
+//             disabled={searchOne === 'shipperUserId'}
+//             placeholder="Select..."
+//             // icon={}
+//             optionFilterProp="children"
+//             onChange={onChangeTwo}
+//               onSearch={onSearch}
+//             // filterOption={filterOption}
+//             options={secondSearchOptions}
+//           /> */}
