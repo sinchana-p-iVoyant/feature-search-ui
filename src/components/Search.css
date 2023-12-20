@@ -1,0 +1,21 @@
+.inputs-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px 80px;
+}
+.select-box {
+  width: 1006px;
+  height: 42px;
+}
+.input {
+  width: 526px;
+  height: 42px;
+}
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 91px;
+  height: 24px;
+}
