@@ -13,6 +13,9 @@
   width: 525px;
   height: 40px;
 }
+.search-input {
+  width: 525px;
+}
 .toggle {
   display: flex;
   align-items: center;

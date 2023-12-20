@@ -178,9 +178,8 @@ interface ResultViewProps {
   receiverOfItemArray: ResultObject[];
 }
 
-// ... (your imports and interfaces)
 
-export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => {
+export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray, searchQuery }) => {
   const [filteredData, setFilteredData] = useState<DataType[]>([]);
   const [table, setTable] = useState('table');
 
@@ -197,8 +196,10 @@ export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray }) =
 
       // Set the filteredData state once the data is ready
       setFilteredData(data);
+      console.log("data:\n")
+      console.log(filteredData)
     }
-  }, [receiverOfItemArray]);
+  }, [receiverOfItemArray, searchQuery]);
 
   let result;
 
