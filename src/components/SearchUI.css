@@ -1,3 +1,21 @@
+.inputs-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 20px 80px;
+  gap: 16px;
+}
+.select-box {
+  width: 500px;
+  height: 40px;
+}
+.input {
+  width: 525px;
+  height: 40px;
+}
+.search-input {
+  width: 525px;
+}
 .result-container {
   padding: 0px 80px;
 }
@@ -48,4 +66,24 @@
 }
 .text-btn-container h4 > span {
   font-weight: 600;
+}
+.text-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.text-container h4 {
+  padding-right: 10px;
+  line-height: 22px;
+}
+.text-container p {
+  padding-left: 10px;
+  line-height: 22px;
+}
+.text-container div {
+  color: #BBBBBB;
+  background-color: #BBBBBB;
+  height: 22px;
+  width: 2px;
 }
