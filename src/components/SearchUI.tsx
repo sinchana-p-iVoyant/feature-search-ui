@@ -42,7 +42,7 @@ const columns: ColumnsType<DataType> = [
     title: 'Phone',
     dataIndex: 'phone',
     key: 'phone',
-    // render: (phone) => {phone === null ? '-' : phone}
+    render: (phone) => (phone ? phone : <p style={{color: 'rgba(147, 146, 146, 0.438)'}}>Not Available</p>)
   },
   {
     title: 'Address',
