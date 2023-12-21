@@ -16,4 +16,5 @@ export const apiSlice = createApi({
 export const { useGetSearchedDataQuery } = apiSlice;
 
 
-//   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.API_BASE_URL }), 
+// baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.API_BASE_URL }), 
+// baseUrl: "http://localhost:3007"

@@ -1,90 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './App.css'
 import { SearchUI } from './components/SearchUI';
-// import { SearchView } from './components/S';
 import {useGetSearchedDataQuery} from './features/api/apiSlice'
-
-import { Button, Input, Space, Table } from 'antd';
-import type { ColumnType, ColumnsType } from 'antd/es/table';
-import { ShipmentDataItem, ReceiverOfItem, ExactMatchItem, SearchDataItem, ResultObject } from '../App'
-
-// import './Result.css'
-
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-}
-
-
-// type DataIndex = keyof DataType;
-
-  const columns: ColumnsType<DataType> = [
-    {
-      title: 'Sl.No',
-      dataIndex: 'key',
-      key: 'name',
-      width: '30%',
-      // ...getColumnSearchProps('name'),
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      width: '30%',
-      // ...getColumnSearchProps('name'),
-    },
-    {
-      title: 'Phone',
-      dataIndex: 'phone',
-      key: 'phone',
-      width: '20%',
-      // ...getColumnSearchProps('age'),
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-      width: '20%',
-      // ...getColumnSearchProps('age'),
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-      // ...getColumnSearchProps('address'),
-      // sorter: (a, b) => a.address.length - b.address.length,
-      // sortDirections: ['descend', 'ascend'],
-    }
-];
-  
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Joe Black',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Jim Green',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-];
 
 export type ShipmentDataItem = {
   partyType: string;
@@ -99,7 +16,6 @@ export type ShipmentDataItem = {
 };
 
 export type ReceiverOfItem = {
-  // shipmentData: string;
   shipmentData: ShipmentDataItem[];
 };
 
@@ -116,10 +32,6 @@ export interface ResultObject {
 }
 
 function App() {
-
-  // const [searchQuery, setSearchQuery] = useState('');
-  // const [data, setData] = useState(['']); 
-  // const [searchResults, setSearchResults] = useState([]);
 
   const {
     data: searchData,
@@ -153,38 +65,8 @@ function App() {
     }
   }, [isSuccess, isError, searchData, error]);
 
-  // console.log(searchData)
-
-  
-  // const handleSearch = (query) => {
-  //     const filteredResults = searchData.filter((item, i) => {
-  //       return Object.values(item).some((value) =>
-  //         {            
-  //           value ? value.toString().toLowerCase().includes(query) : false
-  //         }
-  //       );
-  //     });
-  //     setSearchQuery(query);
-  //     setSearchResults(filteredResults);
-  // };
-
-  // const handleSearch2 = ((array, query)) => {
-  //   const filteredResults = array.filter((receiver) => {
-  //     return receiver.shipmentData.some((item) => {
-  //       return Object.values(item).some((value) => {
-  //         console.log(Object.values(item));
-  //         return value ? value.toString().toLowerCase().includes(query.toLowerCase()) : false;
-  //       });
-  //     });
-  //   });
-
-  //   setSearchQuery(query);
-  //   setSearchResults(filteredResults);
-  // };
-
   return (
     <div className='app-container'>
-      {/* <SearchView /> */}
       {
         isSuccess && <SearchUI receiverOfItemArray={receiverOfItemArray} />
       }
