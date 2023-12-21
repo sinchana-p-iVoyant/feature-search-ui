@@ -117,9 +117,9 @@ export interface ResultObject {
 
 function App() {
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [data, setData] = useState(['']); 
-  const [searchResults, setSearchResults] = useState([]);
+  // const [searchQuery, setSearchQuery] = useState('');
+  // const [data, setData] = useState(['']); 
+  // const [searchResults, setSearchResults] = useState([]);
 
   const {
     data: searchData,
@@ -133,7 +133,7 @@ function App() {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log('Data loaded:', searchData);
+      console.log('Raw Data loaded:', searchData);
 
       searchData.forEach((item: SearchDataItem, firstIndex: number) => {
         item.exactMatch.forEach((exactMatchItem: ExactMatchItem, exactMatchIndex: number) => {
@@ -153,25 +153,40 @@ function App() {
     }
   }, [isSuccess, isError, searchData, error]);
 
-  console.log(searchData)
+  // console.log(searchData)
 
   
-  const handleSearch = (query) => {
-      const filteredResults = searchData.filter((item, i) => {
-        return Object.values(item).some((value) =>
-          value ? value.toString().toLowerCase().includes(query.toLowerCase()) : false
-        );
-      });
-    
-      setSearchQuery(query);
-      setSearchResults(filteredResults);
-  };
+  // const handleSearch = (query) => {
+  //     const filteredResults = searchData.filter((item, i) => {
+  //       return Object.values(item).some((value) =>
+  //         {            
+  //           value ? value.toString().toLowerCase().includes(query) : false
+  //         }
+  //       );
+  //     });
+  //     setSearchQuery(query);
+  //     setSearchResults(filteredResults);
+  // };
+
+  // const handleSearch2 = ((array, query)) => {
+  //   const filteredResults = array.filter((receiver) => {
+  //     return receiver.shipmentData.some((item) => {
+  //       return Object.values(item).some((value) => {
+  //         console.log(Object.values(item));
+  //         return value ? value.toString().toLowerCase().includes(query.toLowerCase()) : false;
+  //       });
+  //     });
+  //   });
+
+  //   setSearchQuery(query);
+  //   setSearchResults(filteredResults);
+  // };
 
   return (
     <div className='app-container'>
-      <SearchView onSearch={handleSearch} />
+      {/* <SearchView /> */}
       {
-        isSuccess && <ResultView receiverOfItemArray={receiverOfItemArray} searchQuery={searchQuery}/>
+        isSuccess && <ResultView receiverOfItemArray={receiverOfItemArray} />
       }
       
     </div>

@@ -7,7 +7,6 @@ const { Search } = Input;
 
 export const SearchView = ({ onSearch }) => {
     const [searchOne, setSearchOne] = useState('')
-    const [searchTwo, setSearchTwo] = useState('')
     const [searchQuery, setSearchQuery] = useState('');
     
     const onChangeOne = (value: string) => {
@@ -15,18 +14,15 @@ export const SearchView = ({ onSearch }) => {
         setSearchOne(value)
     };
 
-    // const onChangeTwo = (value: string) => {
-    //     console.log(`selected ${value}`);
-    //     setSearchTwo(value)
-    //     console.log(searchTwo)
-    // };
+
 
     const handleSearch = () => {
-        // onSearch(searchOne, searchTwo);
         console.log("Searching...")
         console.log(searchQuery)
         // the parent component handles the logic related to the search action.
-        onSearch(searchQuery);
+        // onSearch(searchQuery);
+        setSearchQuery(searchQuery)
+        return searchQuery
     };
 
     const firstSearchOptions = [
@@ -40,24 +36,6 @@ export const SearchView = ({ onSearch }) => {
         }
     ]
 
-    const secondSearchOptions = [
-        {
-            value: 'phone',
-            label: 'Phone',
-        },
-        {
-            value: 'email',
-            label: 'Email',
-        },
-        {
-            value: 'address',
-            label: 'Address',
-        },
-        {
-            value: 'accountNumber',
-            label: 'Account Number',
-        },
-    ]
     
 
   return (
@@ -77,20 +55,13 @@ export const SearchView = ({ onSearch }) => {
               searchOne === 'shipperUserId' ? (
                 <Input disabled className='input' placeholder="Search by email, phone number, address, account number" prefix={<SearchOutlined />} />
               ) : (
-                      <Search
-                          className='search-input'
-                          placeholder="input search text"
-                          onSearch={handleSearch}
-                          style={{ height: '9px' }}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                      />
-                    //   <Input
-                    //       className='input'
-                    //       placeholder="Search by email, phone number, address, account number"
-                    //       prefix={<SearchOutlined />}
-                    //       onChange={(e) => setSearchQuery(e.target.value)}
-                    //   />
-     
+                    <Search
+                        className='search-input'
+                        placeholder="input search text"
+                        onSearch={handleSearch}
+                        style={{ height: '9px' }}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
               )
           }
     
