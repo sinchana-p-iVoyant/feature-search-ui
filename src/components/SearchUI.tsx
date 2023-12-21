@@ -4,11 +4,11 @@ import type { ColumnType, ColumnsType } from 'antd/es/table';
 import { ShipmentDataItem, ReceiverOfItem, ExactMatchItem, SearchDataItem, ResultObject } from '../App'
 import MonacoEditor from 'react-monaco-editor';
 import jsonData from '../../data/db.json'
-import './Result.css'
+import './Search.css'
 
 // search component:
 import { SearchOutlined } from '@ant-design/icons'
-import './Search.css'
+import './SearchUI.css'
 
 const { Search } = Input;
 
@@ -113,7 +113,7 @@ interface ResultViewProps {
   receiverOfItemArray: ResultObject[];
 }
 
-export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSearch }) => {
+export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSearch }) => {
   const [filteredData, setFilteredData] = useState<DataType[]>([]);
   const [table, setTable] = useState('table');
 

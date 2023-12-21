@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css'
-import { ResultView } from './components/ResultView';
-import { SearchView } from './components/SearchView';
+import { SearchUI } from './components/SearchUI';
+// import { SearchView } from './components/S';
 import {useGetSearchedDataQuery} from './features/api/apiSlice'
 
 import { Button, Input, Space, Table } from 'antd';
@@ -186,7 +186,7 @@ function App() {
     <div className='app-container'>
       {/* <SearchView /> */}
       {
-        isSuccess && <ResultView receiverOfItemArray={receiverOfItemArray} />
+        isSuccess && <SearchUI receiverOfItemArray={receiverOfItemArray} />
       }
       
     </div>
