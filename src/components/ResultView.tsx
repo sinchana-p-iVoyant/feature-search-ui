@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Space, Table, Switch, Input } from 'antd';
+import { Button, Space, Table, Switch, Input, Select } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import { ShipmentDataItem, ReceiverOfItem, ExactMatchItem, SearchDataItem, ResultObject } from '../App'
 import MonacoEditor from 'react-monaco-editor';
 import jsonData from '../../data/db.json'
-
 import './Result.css'
+
+// search component:
+import { SearchOutlined } from '@ant-design/icons'
+import './Search.css'
+
+const { Search } = Input;
 
 interface DataType {
   key: string;
@@ -18,8 +23,8 @@ interface DataType {
   rlCd: string;
   state: string;
   zip: string;
+  trackingId: string;
 }
-
 
 // type DataIndex = keyof DataType;
 
@@ -39,9 +44,17 @@ interface DataType {
       // ...getColumnSearchProps('name'),
     },
     {
+      title: 'Tracking Id',
+      dataIndex: 'trackingId',
+      key: 'trackingId',
+      // width: '30%',
+      // ...getColumnSearchProps('name'),
+    },
+    {
       title: 'Phone',
       dataIndex: 'phone',
       key: 'phone',
+      // render: (phone) => {phone === null ? '-' : phone}
       // width: '20%',
       // ...getColumnSearchProps('age'),
     },
@@ -96,110 +109,87 @@ interface DataType {
       // ...getColumnSearchProps('age'),
     }
 ];
-  
-// const data: DataType[] = [
-//   {
-//     key: '1',
-//     name: 'John Brown',
-//     phone: '9999',
-//     addressLn1 : 'abc',
-//     city: "FAIR LAWN",
-//     country: "US",
-//     partyType: 'ShipTo',
-//     rlCd: "Intended Delivery Location-Pkg Addr",
-//     state: "NJ",
-//     zip: "07410",
-//   },
-//   {
-//     key: '2',
-//     name: 'CONVERSE',
-//     phone: '0000000000',
-//     addressLn1 : '11500 80TH avenue',
-//     city: "PLEASANT PRAIRIE",
-//     country: "US",
-//     partyType: 'ShipFrom',
-//     rlCd: "Intended Delivery Location-Pkg Addr",
-//     state: "WI",
-//     zip: "531582909",
-//   },
-//   {
-//     key: '3',
-//     name: 'John Brown',
-//     phone: '9999',
-//     addressLn1 : 'abc',
-//     city: "FAIR LAWN",
-//     country: "US",
-//     partyType: 'ShipTo',
-//     rlCd: "Intended Delivery Location-Pkg Addr",
-//     state: "NJ",
-//     zip: "07410",
-//   },
-//   {
-//     key: '4',
-//     name: 'CONVERSE',
-//     phone: '0000000000',
-//     addressLn1 : '11500 80TH avenue',
-//     city: "PLEASANT PRAIRIE",
-//     country: "US",
-//     partyType: 'ShipFrom',
-//     rlCd: "Intended Delivery Location-Pkg Addr",
-//     state: "WI",
-//     zip: "531582909",
-//   },
-//   {
-//     key: '5',
-//     name: 'John Brown',
-//     phone: '9999',
-//     addressLn1 : 'abc',
-//     city: "FAIR LAWN",
-//     country: "US",
-//     partyType: 'ShipTo',
-//     rlCd: "Intended Delivery Location-Pkg Addr",
-//     state: "NJ",
-//     zip: "07410",
-//   },
-//   {
-//     key: '6',
-//     name: 'CONVERSE',
-//     phone: '0000000000',
-//     addressLn1 : '11500 80TH avenue',
-//     city: "PLEASANT PRAIRIE",
-//     country: "US",
-//     partyType: 'ShipFrom',
-//     rlCd: "Intended Delivery Location-Pkg Addr",
-//     state: "WI",
-//     zip: "531582909",
-//   },
-// ];
-
-
-
 interface ResultViewProps {
   receiverOfItemArray: ResultObject[];
 }
 
-
-export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray, searchQuery }) => {
+export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSearch }) => {
   const [filteredData, setFilteredData] = useState<DataType[]>([]);
   const [table, setTable] = useState('table');
 
+    const [searchOne, setSearchOne] = useState('')
+    const [searchQuery, setSearchQuery] = useState('');
+    
+    const onChangeOne = (value: string) => {
+        console.log(`selected ${value}`);
+        setSearchOne(value)
+  };
+  
+    //   const handleSearch = () => {
+    //     console.log("Searching...")
+    //     console.log(searchQuery)
+    //     // the parent component handles the logic related to the search action.
+    //     // onSearch(searchQuery);
+    //     setSearchQuery(searchQuery)
+    //     return searchQuery
+    // };
+
+
+    const firstSearchOptions = [
+        {
+            value: 'name',
+            label: 'Name',
+        },
+        {
+            value: 'shipperUserId',
+            label: 'Shipper User Id',
+        }
+    ]
+
+  // ---- Start: To get initial filtered data (to table) ---------
   useEffect(() => {
     let count = 0;
     if (receiverOfItemArray) {
-      const data:ShipmentDataItem[] = [];
+      const fData:ShipmentDataItem[] = [];
       receiverOfItemArray.forEach((item, i) => {
+        const trackingId = item.receiverOfItem.trackingId;
+        console.log(item.receiverOfItem.trackingId)
         item.receiverOfItem.shipmentData.forEach((sd, j) => {
           count++
-          data.push({...sd, key: count});
+          fData.push({...sd, key: count, trackingId});
         });
       });
-
+      
       // Set the filteredData state once the data is ready
-      setFilteredData(data);
-      console.log("data:\n")
-      console.log(filteredData)
+      setFilteredData(fData);
+
+      // onSearch(filteredData, searchQuery)
+      // onSearch()
+      
     }
   }, [receiverOfItemArray, searchQuery]);
+
+  console.log("filtered data later:\n")
+  console.log(filteredData)
+
+  // ---- End: To get initial filtered data (to table) ---------
+
+
+  const handleSearch = () => {
+    const searchedResults = filteredData.filter((item) => {
+      return Object.values(item).some((value) => {
+        const includesSearchQuery = value ? value.toString().toLowerCase().includes(searchQuery.toLowerCase()) : false;
+        console.log(Object.values(item));
+        console.log(includesSearchQuery);
+        return includesSearchQuery;
+      });
+    });
+
+    setFilteredData(searchedResults);
+  };
+
+  console.log("Filtered data after search:")
+  console.log(filteredData)
 
   let result;
 
@@ -213,7 +203,7 @@ export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray, sea
           height="650"
           language="json"
           theme="vs-dark"
-          value={JSON.stringify(jsonData, null, 2)}
+          value={JSON.stringify(filteredData, null, 2)}
           options={{
             selectOnLineNumbers: true,
           }}
@@ -224,17 +214,49 @@ export const ResultView: React.FC<ResultViewProps> = ({ receiverOfItemArray, sea
       break;
   }
 
+  console.log("Current Value:")
+  console.log(filteredData)
+ 
   return (
-    <div className='result-container'>
-      <div className='text-btn-container'>
-        <h4>Customer Match | <span>Total Records found (6)</span></h4>
-        <div className='toggle-container'>
-          <div className={table === 'table' ? `active` : ``} onClick={() => setTable('table')}>Table View</div>
-          <div className={table === 'json' ? `active` : ``} onClick={() => setTable('json')}>JSON View</div>
-        </div>
+    <div>
+      <div className='inputs-container'>
+          <Select
+            className='select-box'
+            showSearch
+            placeholder="Search by:"
+            optionFilterProp="children"
+            onChange={onChangeOne}
+            // onSearch={onSearch}
+            // filterOption={filterOption}
+            options={firstSearchOptions}
+          />
+
+          {
+              searchOne === 'shipperUserId' ? (
+                <Input disabled className='input' placeholder="Search by email, phone number, address, account number" prefix={<SearchOutlined />} />
+              ) : (
+                    <Search
+                        className='search-input'
+                        placeholder="input search text"
+                        onSearch={handleSearch}
+                        style={{ height: '9px' }}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+              )
+          }
+    
       </div>
-      
-      {result}
+      <div className='result-container'>
+        <div className='text-btn-container'>
+          <h4>Customer Match | <span>Total Records found (6)</span></h4>
+          <div className='toggle-container'>
+            <div className={table === 'table' ? `active` : ``} onClick={() => setTable('table')}>Table View</div>
+            <div className={table === 'json' ? `active` : ``} onClick={() => setTable('json')}>JSON View</div>
+          </div>
+        </div>
+        
+        {result}
+      </div>
     </div>
   );
 };
