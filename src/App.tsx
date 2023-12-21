@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css'
-import { ResultView } from './components/ResultView';
-import { SearchView } from './components/SearchView';
+import { SearchUI } from './components/SearchUI';
+// import { SearchView } from './components/S';
 import {useGetSearchedDataQuery} from './features/api/apiSlice'
 
 import { Button, Input, Space, Table } from 'antd';
@@ -117,8 +117,9 @@ export interface ResultObject {
 
 function App() {
 
-  const [data, setData] = useState(['']); 
-  const [searchResults, setSearchResults] = useState([]);
+  // const [searchQuery, setSearchQuery] = useState('');
+  // const [data, setData] = useState(['']); 
+  // const [searchResults, setSearchResults] = useState([]);
 
   const {
     data: searchData,
@@ -130,68 +131,62 @@ function App() {
 
   const receiverOfItemArray: ResultObject[] = [];
 
-    useEffect(() => {
-      if (isSuccess) {
-        console.log('Data loaded:', searchData);
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('Raw Data loaded:', searchData);
 
-        searchData.forEach((item: SearchDataItem, firstIndex: number) => {
-          item.exactMatch.forEach((exactMatchItem: ExactMatchItem, exactMatchIndex: number) => {
-            exactMatchItem.receiverOf.forEach((receiverOfItem: ReceiverOfItem, receiverOfIndex: number) => {
-              const resultObject: ResultObject = {
-                  receiverOfItem
-              };
-              receiverOfItemArray.push(resultObject);
-            });
+      searchData.forEach((item: SearchDataItem, firstIndex: number) => {
+        item.exactMatch.forEach((exactMatchItem: ExactMatchItem, exactMatchIndex: number) => {
+          exactMatchItem.receiverOf.forEach((receiverOfItem: ReceiverOfItem, receiverOfIndex: number) => {
+            const resultObject: ResultObject = {
+                receiverOfItem
+            };
+            receiverOfItemArray.push(resultObject);
           });
         });
+      });
+      
+      console.log(receiverOfItemArray);
 
-        console.log(receiverOfItemArray);
+    } else if (isError) {
+      console.error('Error loading data:', error);
+    }
+  }, [isSuccess, isError, searchData, error]);
 
-      } else if (isError) {
-        console.error('Error loading data:', error);
-      }
-    }, [isSuccess, isError, searchData, error]);
-
-  console.log(searchData)
+  // console.log(searchData)
 
   
-  const handleSearch = (searchOne: string, searchTwo: string) => {
+  // const handleSearch = (query) => {
+  //     const filteredResults = searchData.filter((item, i) => {
+  //       return Object.values(item).some((value) =>
+  //         {            
+  //           value ? value.toString().toLowerCase().includes(query) : false
+  //         }
+  //       );
+  //     });
+  //     setSearchQuery(query);
+  //     setSearchResults(filteredResults);
+  // };
 
-    const filteredResults = data.filter((item) => {
-      const searchTerm = searchTwo.toLowerCase(); // will have either 'phone' or 'address' or 'email' or 'accountNbr'
+  // const handleSearch2 = ((array, query)) => {
+  //   const filteredResults = array.filter((receiver) => {
+  //     return receiver.shipmentData.some((item) => {
+  //       return Object.values(item).some((value) => {
+  //         console.log(Object.values(item));
+  //         return value ? value.toString().toLowerCase().includes(query.toLowerCase()) : false;
+  //       });
+  //     });
+  //   });
 
-      if (searchOne === 'name') {
-
-        const nameMatches = item.name.toLowerCase().includes(searchTerm);
-
-        switch (searchTwo) {
-          case 'phone':
-            return nameMatches || item.phone.toLowerCase().includes(searchTerm);
-          case 'email':
-            return nameMatches || item.email.toLowerCase().includes(searchTerm);
-          case 'address':
-            return nameMatches || item.address.toLowerCase().includes(searchTerm);
-          case 'accountNbr':
-            return nameMatches || item.accountNbr.toLowerCase().includes(searchTerm);
-          default:
-            return nameMatches;
-          
-        }
-      } else if (searchOne === 'shipperUserId') {
-        return item.shipperUserId.toLowerCase().includes(searchTerm);
-      }
-      return false; 
-    });
-
-    setSearchResults(filteredResults);
-  };
-
+  //   setSearchQuery(query);
+  //   setSearchResults(filteredResults);
+  // };
 
   return (
     <div className='app-container'>
-      <SearchView onSearch={handleSearch} />
+      {/* <SearchView /> */}
       {
-        isSuccess && <ResultView receiverOfItemArray={receiverOfItemArray} />
+        isSuccess && <SearchUI receiverOfItemArray={receiverOfItemArray} />
       }
       
     </div>
