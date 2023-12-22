@@ -94,14 +94,14 @@ interface ResultViewProps {
   receiverOfItemArray: ResultObject[];
 }
 
-export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSearch }) => {
+export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => {
   const [originalData, setOriginalData] = useState<DataType[]>([]);
   const [filteredData, setFilteredData] = useState<DataType[]>([]);
   const [table, setTable] = useState('table');
 
   const [searchOne, setSearchOne] = useState([])
   const [searchQuery, setSearchQuery] = useState('');
-  const [isSearchedOne, setIsSearchedOne] = useState(false);
+  // const [isSearchedOne, setIsSearchedOne] = useState(false);
 
   const firstSearchOptions = [
     {
@@ -165,7 +165,17 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSea
     console.log(`selected ${value}`);
 
     setSearchOne(value);
-    setIsSearchedOne(true)
+    // setIsSearchedOne(true)
+
+    
+    if (searchOne) {
+      let searchedResultsOne = [];
+      searchedResultsOne = originalData.filter(item => {
+        return searchOne.some(value => Object.values(item).includes(value));
+        
+      });
+    setFilteredData(searchedResultsOne)
+    }
 
   };
 
@@ -190,19 +200,19 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSea
 
         // -----------------
 
-        if (searchOne) {
-          let searchedResultsOne = [];
-          searchedResultsOne = originalData.filter(item => {
-            return searchOne.some(value => Object.values(item).includes(value));
+        // if (searchOne) {
+        //   let searchedResultsOne = [];
+        //   searchedResultsOne = originalData.filter(item => {
+        //     return searchOne.some(value => Object.values(item).includes(value));
             
-          });
-        setFilteredData(searchedResultsOne)
-        }
+        //   });
+        // setFilteredData(searchedResultsOne)
+        // }
       }
     } catch (error) {
       console.log(error);
     }
-  }, [receiverOfItemArray, searchQuery, searchOne]);
+  }, [receiverOfItemArray, searchQuery]);
 
 
   // ---- End: To get initial filtered data (to table) ---------
@@ -212,19 +222,28 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSea
       return Object.values(item).some((value) => {
         const includesSearchQuery = value ? value.toString().toLowerCase().includes(searchQuery.toLowerCase()) : false;
         return includesSearchQuery;
-                
       });
     });
-
     setFilteredData(searchedResultsTwo);
-
   };
+
+  // const handleSearchOne = () => {
+  //   console.log("clicked")
+  //     let searchedResultsOne = [];
+  //     searchedResultsOne = originalData.filter(item => {
+  //       return searchOne.some(value => Object.values(item).includes(value));
+        
+  //     });
+  //   console.log(searchedResultsOne)
+  //     setFilteredData(searchedResultsOne)
+    
+  // }
 
   let result;
 
   switch (table) {
     case 'table':
-      result = <Table columns={columns} dataSource={!isSearchedOne ? filteredData : originalData} pagination={false} scroll={{ y: 510 }}/>;
+      result = <Table columns={columns} dataSource={filteredData} pagination={false} scroll={{ y: 510 }}/>;
       break;
     case 'json':
       result = (
@@ -232,7 +251,7 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSea
           height="650"
           language="javascript"
           theme="vs-light"
-          value={ !isSearchedOne ? (JSON.stringify(filteredData, null, 2)) : (JSON.stringify(originalData, null, 2))}
+          value={JSON.stringify(originalData, null, 2)}
           options={{
             selectOnLineNumbers: true,
             lineHeight: 22,
@@ -245,6 +264,16 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSea
       break;
   }
   const hasShipperUserId = searchOne.includes('shipperUserId')
+
+  // console.log("--searchOne--");
+  // console.log(searchOne);
+
+  // console.log("--originalData--");
+  // console.log(originalData);
+
+  // console.log("--filteredData--");
+  // console.log(filteredData);
+  
   
   return (
     <div>
@@ -257,6 +286,7 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSea
             optionFilterProp="children"
             onChange={onChangeOne}
             options={firstOptions}
+            // onSearch={handleSearchOne}
           />
 
           <Search
@@ -288,3 +318,5 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSea
   );
 };
 
+//  * !isSearchedOne ? filteredData : originalData
+//  value={ !isSearchedOne ? (JSON.stringify(filteredData, null, 2)) : (JSON.stringify(originalData, null, 2))}
