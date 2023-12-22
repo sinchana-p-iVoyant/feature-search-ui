@@ -12,10 +12,12 @@ export type ShipmentDataItem = {
   zip: string;
   adTknNr?: string,
   phone?: string,
-  rICd: string
+  rICd: string,
+  
 };
 
 export type ReceiverOfItem = {
+  trackingId: any;
   shipmentData: ShipmentDataItem[];
 };
 
