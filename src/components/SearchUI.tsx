@@ -8,14 +8,14 @@ import './SearchUI.css'
 const { Search } = Input;
 
 interface DataType {
-  key: string;
+  key: string | number;
   name: string;
   phone?: string;
   addressLn1: string;
   city: string;
-  country: string;
+  country?: string | undefined;
   partyType: string;
-  rlCd: string;
+  rlCd?: string | undefined;
   state: string;
   zip: string;
   trackingId: string;
@@ -26,7 +26,11 @@ const columns: ColumnsType<DataType> = [
     title: 'No.',
     dataIndex: 'key',
     key: 'name',
-    sorter: (a, b) => a.key.length - b.key.length,
+    sorter: (a: DataType, b: DataType) => {
+      const keyA = typeof a.key === 'string' ? a.key : '';
+      const keyB = typeof b.key === 'string' ? b.key : '';
+      return keyA.length - keyB.length;
+    }
   },
   {
     title: 'Name',
@@ -62,7 +66,12 @@ const columns: ColumnsType<DataType> = [
     title: 'Country',
     dataIndex: 'country',
     key: 'country',
-    sorter: (a, b) => a.country.length - b.country.length,
+    sorter: (a: DataType, b: DataType) => {
+      const countryA = a.country || ''; 
+      const countryB = b.country || ''; 
+
+      return countryA.length - countryB.length;
+    },
   },
   {
     title: 'Party Type',
@@ -74,7 +83,11 @@ const columns: ColumnsType<DataType> = [
     title: 'rlCd',
     dataIndex: 'rlCd',
     key: 'rlCd',
-    sorter: (a, b) => a.rlCd.length - b.rlCd.length,
+    sorter: (a: DataType, b: DataType) => {
+      const rlcdA = a.rlCd || ''; 
+      const rlcdB = b.rlCd || ''; 
+      return rlcdA.length - rlcdB.length;
+    }
   },
   {
     title: 'State',
@@ -97,11 +110,9 @@ interface ResultViewProps {
 export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => {
   const [originalData, setOriginalData] = useState<DataType[]>([]);
   const [filteredData, setFilteredData] = useState<DataType[]>([]);
-  const [table, setTable] = useState('table');
-
-  const [searchOne, setSearchOne] = useState([])
-  const [searchQuery, setSearchQuery] = useState('');
-  // const [isSearchedOne, setIsSearchedOne] = useState(false);
+ const [table, setTable] = useState<'table' | 'json'>('table');
+const [searchOne, setSearchOne] = useState<string[]>([]);
+const [searchQuery, setSearchQuery] = useState<string>('');
 
   const firstSearchOptions = [
     {
@@ -162,11 +173,7 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
   })
   
   const onChangeOne = (value: string[]) => {
-    console.log(`selected ${value}`);
-
     setSearchOne(value);
-    // setIsSearchedOne(true)
-
     
     if (searchOne) {
       let searchedResultsOne = [];
@@ -179,18 +186,15 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
 
   };
 
-
-
   // ---- Start: To get initial filtered data (to table) ---------
   useEffect(() => {
     try {
       let count = 0;
       if (receiverOfItemArray) {
-        const fData:ShipmentDataItem[] = [];
-        receiverOfItemArray.forEach((item, i) => {
+        const fData:DataType[] = [];
+        receiverOfItemArray.forEach((item) => {
           const trackingId = item.receiverOfItem.trackingId;
-          // console.log(item.receiverOfItem.trackingId)
-          item.receiverOfItem.shipmentData.forEach((sd, j) => {
+          item.receiverOfItem.shipmentData.forEach((sd: ShipmentDataItem) => {
             count++
             fData.push({...sd, key: count, trackingId});
           });
@@ -198,23 +202,11 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
         setOriginalData(fData);
         setFilteredData(fData);  
 
-        // -----------------
-
-        // if (searchOne) {
-        //   let searchedResultsOne = [];
-        //   searchedResultsOne = originalData.filter(item => {
-        //     return searchOne.some(value => Object.values(item).includes(value));
-            
-        //   });
-        // setFilteredData(searchedResultsOne)
-        // }
       }
     } catch (error) {
       console.log(error);
     }
   }, [receiverOfItemArray, searchQuery]);
-
-
   // ---- End: To get initial filtered data (to table) ---------
 
   const handleSearch = () => {
@@ -227,18 +219,6 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
     setFilteredData(searchedResultsTwo);
   };
 
-  // const handleSearchOne = () => {
-  //   console.log("clicked")
-  //     let searchedResultsOne = [];
-  //     searchedResultsOne = originalData.filter(item => {
-  //       return searchOne.some(value => Object.values(item).includes(value));
-        
-  //     });
-  //   console.log(searchedResultsOne)
-  //     setFilteredData(searchedResultsOne)
-    
-  // }
-
   let result;
 
   switch (table) {
@@ -250,8 +230,8 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
         <MonacoEditor
           height="650"
           language="javascript"
-          theme="vs-light"
-          value={JSON.stringify(originalData, null, 2)}
+          theme="vs-dark"
+          value={JSON.stringify(filteredData, null, 2)}
           options={{
             selectOnLineNumbers: true,
             lineHeight: 22,
@@ -264,16 +244,6 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
       break;
   }
   const hasShipperUserId = searchOne.includes('shipperUserId')
-
-  // console.log("--searchOne--");
-  // console.log(searchOne);
-
-  // console.log("--originalData--");
-  // console.log(originalData);
-
-  // console.log("--filteredData--");
-  // console.log(filteredData);
-  
   
   return (
     <div>
@@ -286,7 +256,6 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
             optionFilterProp="children"
             onChange={onChangeOne}
             options={firstOptions}
-            // onSearch={handleSearchOne}
           />
 
           <Search
@@ -317,6 +286,3 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
     </div>
   );
 };
-
-//  * !isSearchedOne ? filteredData : originalData
-//  value={ !isSearchedOne ? (JSON.stringify(filteredData, null, 2)) : (JSON.stringify(originalData, null, 2))}
