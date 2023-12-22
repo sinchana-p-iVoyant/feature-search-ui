@@ -7,7 +7,7 @@
 }
 .select-box {
   width: 500px;
-  height: 40px;
+  height: auto;
 }
 .input {
   width: 525px;
@@ -80,6 +80,7 @@
 .text-container p {
   padding-left: 10px;
   line-height: 22px;
+  font-weight: bold;
 }
 .text-container div {
   background-color: #BBBBBB;

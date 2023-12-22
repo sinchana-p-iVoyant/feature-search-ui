@@ -27,16 +27,19 @@ const columns: ColumnsType<DataType> = [
     title: 'No.',
     dataIndex: 'key',
     key: 'name',
+    sorter: (a, b) => a.key.length - b.key.length,
   },
   {
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
+    sorter: (a, b) => a.name.length - b.name.length,
   },
   {
-    title: 'Tracking Id',
+    title: 'Shipping User Id',
     dataIndex: 'trackingId',
     key: 'trackingId',
+    sorter: (a, b) => a.trackingId.length - b.trackingId.length,
   },
   {
     title: 'Phone',
@@ -48,36 +51,43 @@ const columns: ColumnsType<DataType> = [
     title: 'Address',
     dataIndex: 'addressLn1',
     key: 'addressLn1',
+    sorter: (a, b) => a.addressLn1.length - b.addressLn1.length,
   },
   {
     title: 'City',
     dataIndex: 'city',
     key: 'city',
+    sorter: (a, b) => a.city.length - b.city.length,
   },
   {
     title: 'Country',
     dataIndex: 'country',
     key: 'country',
+    sorter: (a, b) => a.country.length - b.country.length,
   },
   {
     title: 'Party Type',
     dataIndex: 'partyType',
     key: 'partyType',
+    sorter: (a, b) => a.partyType.length - b.partyType.length,
   },
   {
     title: 'rlCd',
     dataIndex: 'rlCd',
     key: 'rlCd',
+    sorter: (a, b) => a.rlCd.length - b.rlCd.length,
   },
   {
     title: 'State',
     dataIndex: 'state',
     key: 'state',
+    sorter: (a, b) => a.state.length - b.state.length,
   },
   {
-    title: 'Zip',
+    title: 'Pin Code',
     dataIndex: 'zip',
     key: 'zip',
+    sorter: (a, b) => a.zip.length - b.zip.length,
   }
 ];
 
@@ -86,81 +96,168 @@ interface ResultViewProps {
 }
 
 export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSearch }) => {
+  const [originalData, setOriginalData] = useState<DataType[]>([]);
   const [filteredData, setFilteredData] = useState<DataType[]>([]);
   const [table, setTable] = useState('table');
 
-    const [searchOne, setSearchOne] = useState('')
-    const [searchQuery, setSearchQuery] = useState('');
-    
-    const onChangeOne = (value: string) => {
-        console.log(`selected ${value}`);
-        setSearchOne(value)
-  };
-  
-    const firstSearchOptions = [
-        {
-            value: 'name',
-            label: 'Name',
-        },
-        {
-            value: 'shipperUserId',
-            label: 'Shipper User Id',
-        }
+  const [searchOne, setSearchOne] = useState([])
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQueryTwo, setSearchQueryTwo] = useState([]);
+
+  const firstSearchOptions = [
+    {
+      value: 'name',
+      label: 'Name',
+    },
+    {
+      value: 'shipperUserId',
+      label: 'Shipper User Id',
+    },
+    {
+      value: 'addressLn1',
+      label: 'Address',
+    }
   ]
   
+  const namesArray = originalData.map((data, i) => {
+    return {
+      value: data.name + i,
+      label: data.name
+    }
+  })
+
+  const shipperUserIdArrays = originalData.map((data, i) => {
+    return {
+      value: data.trackingId + i,
+      label: data.trackingId
+    }
+  })
+
+  const addressArray = originalData.map((data, i) => {
+    return {
+      value: data.addressLn1 + i,
+      label: data.addressLn1
+    }
+  })
+
+  // console.log("Options Array");
+  // console.log(namesArray);
+  // console.log(shipperUserIdArrays);
+  
+  
+  let firstOptions = firstSearchOptions;
+
+  searchOne.map(option => {
+    switch (option) {
+    case 'name':
+      firstOptions = namesArray;
+      break;
+    case 'shipperUserId':
+      firstOptions = shipperUserIdArrays;
+      break;
+    case 'addressLn1':
+      firstOptions = addressArray;
+      break;
+    default:
+      firstOptions = firstSearchOptions;
+      break;
+  }
+  })
+  
+
+  
+const onChangeOne = (value: string[]) => {
+  console.log(`selected ${value}`);
+
+  setSearchOne(value);
+
+let searchedResultsOne = [];
+if (searchOne) {
+  searchedResultsOne = originalData.filter(item => {
+    return searchOne.some(value => Object.values(item).includes(value));
+  });
+
+  console.log(searchOne);
+  console.log('-------------------------------------------------------------');
+  console.log('if block output', searchedResultsOne);
+}
+
+
+
+};
+
+
+
   // ---- Start: To get initial filtered data (to table) ---------
   useEffect(() => {
+    try {
     let count = 0;
     if (receiverOfItemArray) {
       const fData:ShipmentDataItem[] = [];
       receiverOfItemArray.forEach((item, i) => {
         const trackingId = item.receiverOfItem.trackingId;
-        console.log(item.receiverOfItem.trackingId)
+        // console.log(item.receiverOfItem.trackingId)
         item.receiverOfItem.shipmentData.forEach((sd, j) => {
           count++
           fData.push({...sd, key: count, trackingId});
         });
       });
       
-      setFilteredData(fData);      
+      setOriginalData(fData);
+      setFilteredData(fData);   
     }
-  }, [receiverOfItemArray, searchQuery]);
 
-  console.log("Filtered initial data :\n")
-  console.log(filteredData)
+    
+    // console.log(searchOne);
+    
+    
+    } catch (error) {
+      console.log(error);
+      
+    }
+
+  }, [receiverOfItemArray, searchQuery, searchOne]);
+
+  // console.log("Filtered initial data :\n")
+  // console.log(filteredData)
+
   // ---- End: To get initial filtered data (to table) ---------
 
   const handleSearch = () => {
-    const searchedResults = filteredData.filter((item) => {
+    const searchedResultsTwo = filteredData.filter((item) => {
       return Object.values(item).some((value) => {
         const includesSearchQuery = value ? value.toString().toLowerCase().includes(searchQuery.toLowerCase()) : false;
-        console.log(Object.values(item));
-        console.log(includesSearchQuery);
         return includesSearchQuery;
+        
+        // console.log(Object.values(item));
+        // console.log(includesSearchQuery);
+        
       });
     });
 
-    setFilteredData(searchedResults);
+    setFilteredData(searchedResultsTwo);
+
   };
 
-  console.log("Filtered data after search:")
-  console.log(filteredData)
+  // console.log("Filtered data after search:")
+  // console.log(filteredData)
 
   let result;
 
   switch (table) {
     case 'table':
-      result = <Table columns={columns} dataSource={filteredData} pagination={false} />;
+      result = <Table columns={columns} dataSource={filteredData} pagination={false} scroll={{ y: 510 }}/>;
       break;
     case 'json':
       result = (
         <MonacoEditor
           height="650"
-          language="json"
-          theme="vs-dark"
+          language="javascript"
+          theme="vs-light"
           value={JSON.stringify(filteredData, null, 2)}
           options={{
             selectOnLineNumbers: true,
+            lineHeight: 22,
           }}
         />
       );
@@ -169,34 +266,38 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSea
       break;
   }
 
-  console.log("Current Value:")
-  console.log(filteredData)
+  // console.log("Current Value:")
+  // console.log(filteredData)
  
+  console.log(searchOne);
+  
+  const hasShipperUserId = searchOne.includes('shipperUserId')
+  // console.log(hasShipperUserId);
+
+  // console.log(originalData);
+  
   return (
     <div>
       <div className='inputs-container'>
           <Select
             className='select-box'
             showSearch
+            mode='tags'
             placeholder="Search by:"
             optionFilterProp="children"
             onChange={onChangeOne}
-            options={firstSearchOptions}
+            options={firstOptions}
           />
 
-          {
-            searchOne === 'shipperUserId' ? (
-              <Input disabled className='input' placeholder="Search by email, phone number, address, account number" prefix={<SearchOutlined />} />
-            ) : (
-              <Search
-                  className='search-input'
-                  placeholder="Search Address by street name, city, pincode"
-                  onSearch={handleSearch}
-                  style={{ height: '9px' }}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            )
-          }
+          <Search
+            disabled= {hasShipperUserId}
+            className='search-input'
+            placeholder="Search Address by street name, city, pincode"
+            onSearch={handleSearch}
+            style={{ height: '9px' }}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />  
+        
       </div>
 
       <div className='result-container'>
@@ -219,3 +320,9 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSea
 
 
 
+
+// <Input
+// disabled
+// className='input'
+// placeholder="Search by email, phone number, address, account number"
+// prefix={<SearchOutlined />} />
