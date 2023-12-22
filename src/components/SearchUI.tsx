@@ -3,7 +3,6 @@ import { Table, Input, Select } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { ShipmentDataItem, ResultObject } from '../App'
 import MonacoEditor from 'react-monaco-editor';
-import { SearchOutlined } from '@ant-design/icons'
 import './SearchUI.css'
 
 const { Search } = Input;
@@ -95,14 +94,14 @@ interface ResultViewProps {
   receiverOfItemArray: ResultObject[];
 }
 
-export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSearch }) => {
+export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => {
   const [originalData, setOriginalData] = useState<DataType[]>([]);
   const [filteredData, setFilteredData] = useState<DataType[]>([]);
   const [table, setTable] = useState('table');
 
   const [searchOne, setSearchOne] = useState([])
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchQueryTwo, setSearchQueryTwo] = useState([]);
+  // const [isSearchedOne, setIsSearchedOne] = useState(false);
 
   const firstSearchOptions = [
     {
@@ -121,30 +120,28 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSea
   
   const namesArray = originalData.map((data, i) => {
     return {
-      value: data.name + i,
+      key: data.name + i,
+      value: data.name,
       label: data.name
     }
   })
 
   const shipperUserIdArrays = originalData.map((data, i) => {
     return {
-      value: data.trackingId + i,
+      key: data.trackingId + i,
+      value: data.trackingId,
       label: data.trackingId
     }
   })
 
   const addressArray = originalData.map((data, i) => {
     return {
-      value: data.addressLn1 + i,
+      key: data.addressLn1 + i,
+      value: data.addressLn1,
       label: data.addressLn1
     }
   })
 
-  // console.log("Options Array");
-  // console.log(namesArray);
-  // console.log(shipperUserIdArrays);
-  
-  
   let firstOptions = firstSearchOptions;
 
   searchOne.map(option => {
@@ -164,62 +161,59 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray, onSea
   }
   })
   
+  const onChangeOne = (value: string[]) => {
+    console.log(`selected ${value}`);
 
-  
-const onChangeOne = (value: string[]) => {
-  console.log(`selected ${value}`);
+    setSearchOne(value);
+    // setIsSearchedOne(true)
 
-  setSearchOne(value);
+    
+    if (searchOne) {
+      let searchedResultsOne = [];
+      searchedResultsOne = originalData.filter(item => {
+        return searchOne.some(value => Object.values(item).includes(value));
+        
+      });
+    setFilteredData(searchedResultsOne)
+    }
 
-let searchedResultsOne = [];
-if (searchOne) {
-  searchedResultsOne = originalData.filter(item => {
-    return searchOne.some(value => Object.values(item).includes(value));
-  });
-
-  console.log(searchOne);
-  console.log('-------------------------------------------------------------');
-  console.log('if block output', searchedResultsOne);
-}
-
-
-
-};
+  };
 
 
 
   // ---- Start: To get initial filtered data (to table) ---------
   useEffect(() => {
     try {
-    let count = 0;
-    if (receiverOfItemArray) {
-      const fData:ShipmentDataItem[] = [];
-      receiverOfItemArray.forEach((item, i) => {
-        const trackingId = item.receiverOfItem.trackingId;
-        // console.log(item.receiverOfItem.trackingId)
-        item.receiverOfItem.shipmentData.forEach((sd, j) => {
-          count++
-          fData.push({...sd, key: count, trackingId});
+      let count = 0;
+      if (receiverOfItemArray) {
+        const fData:ShipmentDataItem[] = [];
+        receiverOfItemArray.forEach((item, i) => {
+          const trackingId = item.receiverOfItem.trackingId;
+          // console.log(item.receiverOfItem.trackingId)
+          item.receiverOfItem.shipmentData.forEach((sd, j) => {
+            count++
+            fData.push({...sd, key: count, trackingId});
+          });
         });
-      });
-      
-      setOriginalData(fData);
-      setFilteredData(fData);   
-    }
+        setOriginalData(fData);
+        setFilteredData(fData);  
 
-    
-    // console.log(searchOne);
-    
-    
+        // -----------------
+
+        // if (searchOne) {
+        //   let searchedResultsOne = [];
+        //   searchedResultsOne = originalData.filter(item => {
+        //     return searchOne.some(value => Object.values(item).includes(value));
+            
+        //   });
+        // setFilteredData(searchedResultsOne)
+        // }
+      }
     } catch (error) {
       console.log(error);
-      
     }
+  }, [receiverOfItemArray, searchQuery]);
 
-  }, [receiverOfItemArray, searchQuery, searchOne]);
-
-  // console.log("Filtered initial data :\n")
-  // console.log(filteredData)
 
   // ---- End: To get initial filtered data (to table) ---------
 
@@ -228,19 +222,22 @@ if (searchOne) {
       return Object.values(item).some((value) => {
         const includesSearchQuery = value ? value.toString().toLowerCase().includes(searchQuery.toLowerCase()) : false;
         return includesSearchQuery;
-        
-        // console.log(Object.values(item));
-        // console.log(includesSearchQuery);
-        
       });
     });
-
     setFilteredData(searchedResultsTwo);
-
   };
 
-  // console.log("Filtered data after search:")
-  // console.log(filteredData)
+  // const handleSearchOne = () => {
+  //   console.log("clicked")
+  //     let searchedResultsOne = [];
+  //     searchedResultsOne = originalData.filter(item => {
+  //       return searchOne.some(value => Object.values(item).includes(value));
+        
+  //     });
+  //   console.log(searchedResultsOne)
+  //     setFilteredData(searchedResultsOne)
+    
+  // }
 
   let result;
 
@@ -254,7 +251,7 @@ if (searchOne) {
           height="650"
           language="javascript"
           theme="vs-light"
-          value={JSON.stringify(filteredData, null, 2)}
+          value={JSON.stringify(originalData, null, 2)}
           options={{
             selectOnLineNumbers: true,
             lineHeight: 22,
@@ -263,18 +260,20 @@ if (searchOne) {
       );
       break;
     default:
+     
       break;
   }
-
-  // console.log("Current Value:")
-  // console.log(filteredData)
- 
-  console.log(searchOne);
-  
   const hasShipperUserId = searchOne.includes('shipperUserId')
-  // console.log(hasShipperUserId);
 
+  // console.log("--searchOne--");
+  // console.log(searchOne);
+
+  // console.log("--originalData--");
   // console.log(originalData);
+
+  // console.log("--filteredData--");
+  // console.log(filteredData);
+  
   
   return (
     <div>
@@ -287,6 +286,7 @@ if (searchOne) {
             optionFilterProp="children"
             onChange={onChangeOne}
             options={firstOptions}
+            // onSearch={handleSearchOne}
           />
 
           <Search
@@ -318,11 +318,5 @@ if (searchOne) {
   );
 };
 
-
-
-
-// <Input
-// disabled
-// className='input'
-// placeholder="Search by email, phone number, address, account number"
-// prefix={<SearchOutlined />} />
+//  * !isSearchedOne ? filteredData : originalData
+//  value={ !isSearchedOne ? (JSON.stringify(filteredData, null, 2)) : (JSON.stringify(originalData, null, 2))}
