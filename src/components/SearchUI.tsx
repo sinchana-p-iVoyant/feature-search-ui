@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Input, Select } from 'antd';
+import { Table, Input, Select, Space, Divider, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { ShipmentDataItem, ResultObject } from '../App'
 import MonacoEditor from 'react-monaco-editor';
@@ -26,11 +26,11 @@ const columns: ColumnsType<DataType> = [
     title: 'No.',
     dataIndex: 'key',
     key: 'name',
-    sorter: (a: DataType, b: DataType) => {
-      const keyA = typeof a.key === 'string' ? a.key : '';
-      const keyB = typeof b.key === 'string' ? b.key : '';
-      return keyA.length - keyB.length;
-    }
+    // sorter: (a: DataType, b: DataType) => {
+    //   const keyA = typeof a.key === 'string' ? a.key : '';
+    //   const keyB = typeof b.key === 'string' ? b.key : '';
+    //   return keyA.length - keyB.length;
+    // }
   },
   {
     title: 'Name',
@@ -123,54 +123,69 @@ const [searchQuery, setSearchQuery] = useState<string>('');
       value: 'shipperUserId',
       label: 'Shipper User Id',
     },
+  ]
+
+  const secondSearchOptions = [
     {
-      value: 'addressLn1',
+      value: 'phone',
+      label: 'Phone No',
+    },
+    {
+      value: 'email',
+      label: 'Email',
+    },
+    {
+      value: 'address',
       label: 'Address',
+    },
+    {
+      value: 'accountNo',
+      label: 'Account No',
     }
   ]
   
-  const namesArray = originalData.map((data, i) => {
-    return {
-      key: data.name + i,
-      value: data.name,
-      label: data.name
-    }
-  })
+  // const namesArray = originalData.map((data, i) => {
+  //   return {
+  //     key: data.name + i,
+  //     value: data.name,
+  //     label: data.name
+  //   }
+  // })
 
-  const shipperUserIdArrays = originalData.map((data, i) => {
-    return {
-      key: data.trackingId + i,
-      value: data.trackingId,
-      label: data.trackingId
-    }
-  })
+  // const shipperUserIdArrays = originalData.map((data, i) => {
+  //   return {
+  //     key: data.trackingId + i,
+  //     value: data.trackingId,
+  //     label: data.trackingId
+  //   }
+  // })
 
-  const addressArray = originalData.map((data, i) => {
-    return {
-      key: data.addressLn1 + i,
-      value: data.addressLn1,
-      label: data.addressLn1
-    }
-  })
+  // const addressArray = originalData.map((data, i) => {
+  //   return {
+  //     key: data.addressLn1 + i,
+  //     value: data.addressLn1,
+  //     label: data.addressLn1
+  //   }
+  // })
 
-  let firstOptions = firstSearchOptions;
+  // let firstOptions = firstSearchOptions;
 
-  searchOne.map(option => {
-    switch (option) {
-    case 'name':
-      firstOptions = namesArray;
-      break;
-    case 'shipperUserId':
-      firstOptions = shipperUserIdArrays;
-      break;
-    case 'addressLn1':
-      firstOptions = addressArray;
-      break;
-    default:
-      firstOptions = firstSearchOptions;
-      break;
-  }
-  })
+  // searchOne.map(option => {
+  //   switch (option) {
+  //   case 'name':
+  //     firstOptions = namesArray;
+  //     break;
+  //   case 'shipperUserId':
+  //     firstOptions = shipperUserIdArrays;
+  //     break;
+  //   case 'addressLn1':
+  //     firstOptions = addressArray;
+  //     break;
+  //   default:
+  //     firstOptions = firstSearchOptions;
+  //     break;
+  // }
+  // })
   
   const onChangeOne = (value: string[]) => {
     setSearchOne(value);
@@ -248,7 +263,37 @@ const [searchQuery, setSearchQuery] = useState<string>('');
   return (
     <div>
       <div className='inputs-container'>
-          <Select
+        <div className="select-search-inputs">
+          <div className='each-field'>
+            <Space.Compact >
+              <Select style={{ borderRadius: '0 !important', width: '230px' }} defaultValue="Select" options={firstSearchOptions} />
+              <Input defaultValue="" />
+            </Space.Compact>
+          </div>
+          <div className='each-field'>
+            <Space.Compact>
+              <Select
+                disabled={true}
+                defaultValue="Select"
+                options={secondSearchOptions}
+                style={{ borderRadius: 0, width: '230px' }} />
+              <Input
+                disabled={true}
+                defaultValue="" />
+            </Space.Compact>
+          </div>
+        </div>
+
+        <Divider orientation='right' type='vertical' style={{ height: '110px' }}/>
+
+        <Button
+          style={{ marginTop: '35px' }}
+          type="primary" >
+          Search
+        </Button>
+
+
+          {/* <Select
             className='select-box'
             showSearch
             mode='tags'
@@ -256,7 +301,7 @@ const [searchQuery, setSearchQuery] = useState<string>('');
             optionFilterProp="children"
             onChange={onChangeOne}
             options={firstOptions}
-          />
+        />
 
           <Search
             disabled= {hasShipperUserId}
@@ -265,7 +310,8 @@ const [searchQuery, setSearchQuery] = useState<string>('');
             onSearch={handleSearch}
             style={{ height: '9px' }}
             onChange={(e) => setSearchQuery(e.target.value)}
-          />  
+        />   */}
+
         
       </div>
 
@@ -276,9 +322,12 @@ const [searchQuery, setSearchQuery] = useState<string>('');
             <div></div>
             <p>Total Records found {filteredData.length}</p>
           </div>
-          <div className='toggle-container'>
-            <div className={table === 'table' ? `active` : ``} onClick={() => setTable('table')}>Table View</div>
-            <div className={table === 'json' ? `active` : ``} onClick={() => setTable('json')}>JSON View</div>
+          <div className='btns-container'>
+            <div className='toggle-container'>
+              <div className={table === 'table' ? `active` : ``} onClick={() => setTable('table')}>Table View</div>
+              <div className={table === 'json' ? `active` : ``} onClick={() => setTable('json')}>JSON View</div>
+            </div>
+            <div className='clear-btn'>Clear All</div>
           </div>
         </div>
         {result}
