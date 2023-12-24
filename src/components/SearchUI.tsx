@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Input, Select } from 'antd';
+import { Table, Input, Select, Space, Divider, Button, Form, Card } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { ShipmentDataItem, ResultObject } from '../App'
 import MonacoEditor from 'react-monaco-editor';
 import './SearchUI.css'
+import { CloseOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 
@@ -26,11 +27,11 @@ const columns: ColumnsType<DataType> = [
     title: 'No.',
     dataIndex: 'key',
     key: 'name',
-    sorter: (a: DataType, b: DataType) => {
-      const keyA = typeof a.key === 'string' ? a.key : '';
-      const keyB = typeof b.key === 'string' ? b.key : '';
-      return keyA.length - keyB.length;
-    }
+    // sorter: (a: DataType, b: DataType) => {
+    //   const keyA = typeof a.key === 'string' ? a.key : '';
+    //   const keyB = typeof b.key === 'string' ? b.key : '';
+    //   return keyA.length - keyB.length;
+    // }
   },
   {
     title: 'Name',
@@ -123,54 +124,69 @@ const [searchQuery, setSearchQuery] = useState<string>('');
       value: 'shipperUserId',
       label: 'Shipper User Id',
     },
+  ]
+
+  const secondSearchOptions = [
     {
-      value: 'addressLn1',
+      value: 'phone',
+      label: 'Phone No',
+    },
+    {
+      value: 'email',
+      label: 'Email',
+    },
+    {
+      value: 'address',
       label: 'Address',
+    },
+    {
+      value: 'accountNo',
+      label: 'Account No',
     }
   ]
   
-  const namesArray = originalData.map((data, i) => {
-    return {
-      key: data.name + i,
-      value: data.name,
-      label: data.name
-    }
-  })
+  // const namesArray = originalData.map((data, i) => {
+  //   return {
+  //     key: data.name + i,
+  //     value: data.name,
+  //     label: data.name
+  //   }
+  // })
 
-  const shipperUserIdArrays = originalData.map((data, i) => {
-    return {
-      key: data.trackingId + i,
-      value: data.trackingId,
-      label: data.trackingId
-    }
-  })
+  // const shipperUserIdArrays = originalData.map((data, i) => {
+  //   return {
+  //     key: data.trackingId + i,
+  //     value: data.trackingId,
+  //     label: data.trackingId
+  //   }
+  // })
 
-  const addressArray = originalData.map((data, i) => {
-    return {
-      key: data.addressLn1 + i,
-      value: data.addressLn1,
-      label: data.addressLn1
-    }
-  })
+  // const addressArray = originalData.map((data, i) => {
+  //   return {
+  //     key: data.addressLn1 + i,
+  //     value: data.addressLn1,
+  //     label: data.addressLn1
+  //   }
+  // })
 
-  let firstOptions = firstSearchOptions;
+  // let firstOptions = firstSearchOptions;
 
-  searchOne.map(option => {
-    switch (option) {
-    case 'name':
-      firstOptions = namesArray;
-      break;
-    case 'shipperUserId':
-      firstOptions = shipperUserIdArrays;
-      break;
-    case 'addressLn1':
-      firstOptions = addressArray;
-      break;
-    default:
-      firstOptions = firstSearchOptions;
-      break;
-  }
-  })
+  // searchOne.map(option => {
+  //   switch (option) {
+  //   case 'name':
+  //     firstOptions = namesArray;
+  //     break;
+  //   case 'shipperUserId':
+  //     firstOptions = shipperUserIdArrays;
+  //     break;
+  //   case 'addressLn1':
+  //     firstOptions = addressArray;
+  //     break;
+  //   default:
+  //     firstOptions = firstSearchOptions;
+  //     break;
+  // }
+  // })
   
   const onChangeOne = (value: string[]) => {
     setSearchOne(value);
@@ -244,11 +260,92 @@ const [searchQuery, setSearchQuery] = useState<string>('');
       break;
   }
   const hasShipperUserId = searchOne.includes('shipperUserId')
+
+  const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+  };
+
+  const [form] = Form.useForm();
   
   return (
     <div>
       <div className='inputs-container'>
-          <Select
+        <div className="select-search-inputs">
+          <div className='each-field'>
+            <Space.Compact >
+              <Select style={{ borderRadius: '0 !important', width: '209px', height: '40px' }} defaultValue="Select" options={firstSearchOptions} />
+              <Input defaultValue="" style={{ width: '357px', height: '40px' }} />
+            </Space.Compact>
+          </div>
+          <div className='each-field'>
+            <Space.Compact>
+              <Select
+                disabled={false}
+                defaultValue="Select"
+                options={secondSearchOptions}
+                style={{ borderRadius: 0, width: '209px', height: '40px' }} />
+              <Input
+                disabled={false}
+                defaultValue=""
+                style={{ width: '357px', height: '40px' }}
+              />
+            </Space.Compact>
+            <div className="form-container-wrapper">
+              <div className='close-btn' style={{ textAlign: 'right' }}><CloseOutlined /></div>  
+              <div className="form-container">
+                <Form
+                  {...layout}
+                  form={form}
+                  name="control-hooks"
+                  // onFinish={onFinish}
+                  style={{ maxWidth: 532, gap: '8px' }}
+                >
+                  <Form.Item name="address Line 1" label="Address Line 1" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="address Line 2" label="Address Line 2" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="city" label="City" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="state" label="State" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="zipcode" label="Zip code" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <div className='form-btns-container'>
+                    <Button
+                      style={{ marginRight: '16px', width: '82px', height: '32px' }}
+                      type="primary" >
+                      Submit
+                    </Button>
+                    <Button
+                      style={{ width: '82px', height: '32px' }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </Form>
+                
+               </div>
+              
+            </div>
+          </div>
+        </div>
+
+        <Divider orientation='right' type='vertical' style={{ height: '110px' }}/>
+
+        <Button
+          style={{ marginTop: '35px', width: '89px', height: '40px' }}
+          type="primary" >
+          Search
+        </Button>
+
+
+          {/* <Select
             className='select-box'
             showSearch
             mode='tags'
@@ -256,7 +353,7 @@ const [searchQuery, setSearchQuery] = useState<string>('');
             optionFilterProp="children"
             onChange={onChangeOne}
             options={firstOptions}
-          />
+        />
 
           <Search
             disabled= {hasShipperUserId}
@@ -265,7 +362,8 @@ const [searchQuery, setSearchQuery] = useState<string>('');
             onSearch={handleSearch}
             style={{ height: '9px' }}
             onChange={(e) => setSearchQuery(e.target.value)}
-          />  
+        />   */}
+
         
       </div>
 
@@ -276,9 +374,12 @@ const [searchQuery, setSearchQuery] = useState<string>('');
             <div></div>
             <p>Total Records found {filteredData.length}</p>
           </div>
-          <div className='toggle-container'>
-            <div className={table === 'table' ? `active` : ``} onClick={() => setTable('table')}>Table View</div>
-            <div className={table === 'json' ? `active` : ``} onClick={() => setTable('json')}>JSON View</div>
+          <div className='btns-container'>
+            <div className='toggle-container'>
+              <div className={table === 'table' ? `active` : ``} onClick={() => setTable('table')}>Table View</div>
+              <div className={table === 'json' ? `active` : ``} onClick={() => setTable('json')}>JSON View</div>
+            </div>
+            <div className='clear-btn'>Clear All</div>
           </div>
         </div>
         {result}
@@ -286,3 +387,31 @@ const [searchQuery, setSearchQuery] = useState<string>('');
     </div>
   );
 };
+
+
+{/* <form action="">
+      <div>
+        <label>Address Line 1:</label>
+        <input placeholder='Enter address' required />
+      </div>
+      <div>
+        <label>Address Line 2:</label>
+        <input placeholder='Enter address' required  />
+      </div>
+      <div>
+        <label>City:</label>
+        <input placeholder='Enter city' required  />
+      </div>
+      <div>
+        <label>State:</label>
+        <input placeholder='Enter state' required  />
+      </div>
+      <div>
+        <label></label>
+        <input placeholder='Eg:577005' required  />
+      </div>
+      <div>
+        <button type="submit">Submit</button>
+        <button>Cancel</button>
+      </div>
+    </form> */}
