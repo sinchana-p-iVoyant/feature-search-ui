@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Input, Select, Space, Divider, Button } from 'antd';
+import { Table, Input, Select, Space, Divider, Button, Form, Card } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { ShipmentDataItem, ResultObject } from '../App'
 import MonacoEditor from 'react-monaco-editor';
 import './SearchUI.css'
+import { CloseOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 
@@ -259,6 +260,13 @@ const [searchQuery, setSearchQuery] = useState<string>('');
       break;
   }
   const hasShipperUserId = searchOne.includes('shipperUserId')
+
+  const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+  };
+
+  const [form] = Form.useForm();
   
   return (
     <div>
@@ -266,28 +274,72 @@ const [searchQuery, setSearchQuery] = useState<string>('');
         <div className="select-search-inputs">
           <div className='each-field'>
             <Space.Compact >
-              <Select style={{ borderRadius: '0 !important', width: '230px' }} defaultValue="Select" options={firstSearchOptions} />
-              <Input defaultValue="" />
+              <Select style={{ borderRadius: '0 !important', width: '209px', height: '40px' }} defaultValue="Select" options={firstSearchOptions} />
+              <Input defaultValue="" style={{ width: '357px', height: '40px' }} />
             </Space.Compact>
           </div>
           <div className='each-field'>
             <Space.Compact>
               <Select
-                disabled={true}
+                disabled={false}
                 defaultValue="Select"
                 options={secondSearchOptions}
-                style={{ borderRadius: 0, width: '230px' }} />
+                style={{ borderRadius: 0, width: '209px', height: '40px' }} />
               <Input
-                disabled={true}
-                defaultValue="" />
+                disabled={false}
+                defaultValue=""
+                style={{ width: '357px', height: '40px' }}
+              />
             </Space.Compact>
+            <div className="form-container-wrapper">
+              <div className='close-btn' style={{ textAlign: 'right' }}><CloseOutlined /></div>  
+              <div className="form-container">
+                <Form
+                  {...layout}
+                  form={form}
+                  name="control-hooks"
+                  // onFinish={onFinish}
+                  style={{ maxWidth: 532, gap: '8px' }}
+                >
+                  <Form.Item name="address Line 1" label="Address Line 1" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="address Line 2" label="Address Line 2" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="city" label="City" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="state" label="State" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="zipcode" label="Zip code" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <div className='form-btns-container'>
+                    <Button
+                      style={{ marginRight: '16px', width: '82px', height: '32px' }}
+                      type="primary" >
+                      Submit
+                    </Button>
+                    <Button
+                      style={{ width: '82px', height: '32px' }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </Form>
+                
+               </div>
+              
+            </div>
           </div>
         </div>
 
         <Divider orientation='right' type='vertical' style={{ height: '110px' }}/>
 
         <Button
-          style={{ marginTop: '35px' }}
+          style={{ marginTop: '35px', width: '89px', height: '40px' }}
           type="primary" >
           Search
         </Button>
@@ -335,3 +387,31 @@ const [searchQuery, setSearchQuery] = useState<string>('');
     </div>
   );
 };
+
+
+{/* <form action="">
+      <div>
+        <label>Address Line 1:</label>
+        <input placeholder='Enter address' required />
+      </div>
+      <div>
+        <label>Address Line 2:</label>
+        <input placeholder='Enter address' required  />
+      </div>
+      <div>
+        <label>City:</label>
+        <input placeholder='Enter city' required  />
+      </div>
+      <div>
+        <label>State:</label>
+        <input placeholder='Enter state' required  />
+      </div>
+      <div>
+        <label></label>
+        <input placeholder='Eg:577005' required  />
+      </div>
+      <div>
+        <button type="submit">Submit</button>
+        <button>Cancel</button>
+      </div>
+    </form> */}

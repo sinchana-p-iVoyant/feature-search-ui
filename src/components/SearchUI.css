@@ -118,3 +118,30 @@
 .each-field:nth-of-type(1) {
   margin-bottom: 40px;
 }
+.form-container-wrapper {
+  padding: 10px 0 15px 0;
+  background: #FBFBFB;
+  margin-top: 16px;
+}
+.close-btn {
+  text-align: right;
+  margin-top: 0;
+  font-size: 14px;
+  color: rgba(102, 102, 102, 0.65);
+  padding-bottom: 2px;
+  padding-right: 9px;
+  padding-left: 10px;
+}
+.form-container {
+  width: 532px;
+  height: 278px;
+  padding: 6px 16px 23px 0;
+  display: flex;
+  flex-direction: column;
+}
+.form-btns-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
