@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Input, Select } from 'antd';
+import { Table, Input, Select, Space, Divider, Button, Form, Card } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { ShipmentDataItem, ResultObject } from '../App'
 import MonacoEditor from 'react-monaco-editor';
 import './SearchUI.css'
+import { CloseOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 
 interface DataType {
-  key: string;
+  key: string | number;
   name: string;
   phone?: string;
   addressLn1: string;
   city: string;
-  country: string;
+  country?: string | undefined;
   partyType: string;
-  rlCd: string;
+  rlCd?: string | undefined;
   state: string;
   zip: string;
   trackingId: string;
@@ -26,7 +27,11 @@ const columns: ColumnsType<DataType> = [
     title: 'No.',
     dataIndex: 'key',
     key: 'name',
-    sorter: (a, b) => a.key.length - b.key.length,
+    // sorter: (a: DataType, b: DataType) => {
+    //   const keyA = typeof a.key === 'string' ? a.key : '';
+    //   const keyB = typeof b.key === 'string' ? b.key : '';
+    //   return keyA.length - keyB.length;
+    // }
   },
   {
     title: 'Name',
@@ -62,7 +67,12 @@ const columns: ColumnsType<DataType> = [
     title: 'Country',
     dataIndex: 'country',
     key: 'country',
-    sorter: (a, b) => a.country.length - b.country.length,
+    sorter: (a: DataType, b: DataType) => {
+      const countryA = a.country || ''; 
+      const countryB = b.country || ''; 
+
+      return countryA.length - countryB.length;
+    },
   },
   {
     title: 'Party Type',
@@ -74,7 +84,11 @@ const columns: ColumnsType<DataType> = [
     title: 'rlCd',
     dataIndex: 'rlCd',
     key: 'rlCd',
-    sorter: (a, b) => a.rlCd.length - b.rlCd.length,
+    sorter: (a: DataType, b: DataType) => {
+      const rlcdA = a.rlCd || ''; 
+      const rlcdB = b.rlCd || ''; 
+      return rlcdA.length - rlcdB.length;
+    }
   },
   {
     title: 'State',
@@ -97,11 +111,9 @@ interface ResultViewProps {
 export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => {
   const [originalData, setOriginalData] = useState<DataType[]>([]);
   const [filteredData, setFilteredData] = useState<DataType[]>([]);
-  const [table, setTable] = useState('table');
-
-  const [searchOne, setSearchOne] = useState([])
-  const [searchQuery, setSearchQuery] = useState('');
-  // const [isSearchedOne, setIsSearchedOne] = useState(false);
+ const [table, setTable] = useState<'table' | 'json'>('table');
+const [searchOne, setSearchOne] = useState<string[]>([]);
+const [searchQuery, setSearchQuery] = useState<string>('');
 
   const firstSearchOptions = [
     {
@@ -112,61 +124,72 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
       value: 'shipperUserId',
       label: 'Shipper User Id',
     },
+  ]
+
+  const secondSearchOptions = [
     {
-      value: 'addressLn1',
+      value: 'phone',
+      label: 'Phone No',
+    },
+    {
+      value: 'email',
+      label: 'Email',
+    },
+    {
+      value: 'address',
       label: 'Address',
+    },
+    {
+      value: 'accountNo',
+      label: 'Account No',
     }
   ]
   
-  const namesArray = originalData.map((data, i) => {
-    return {
-      key: data.name + i,
-      value: data.name,
-      label: data.name
-    }
-  })
+  // const namesArray = originalData.map((data, i) => {
+  //   return {
+  //     key: data.name + i,
+  //     value: data.name,
+  //     label: data.name
+  //   }
+  // })
 
-  const shipperUserIdArrays = originalData.map((data, i) => {
-    return {
-      key: data.trackingId + i,
-      value: data.trackingId,
-      label: data.trackingId
-    }
-  })
+  // const shipperUserIdArrays = originalData.map((data, i) => {
+  //   return {
+  //     key: data.trackingId + i,
+  //     value: data.trackingId,
+  //     label: data.trackingId
+  //   }
+  // })
 
-  const addressArray = originalData.map((data, i) => {
-    return {
-      key: data.addressLn1 + i,
-      value: data.addressLn1,
-      label: data.addressLn1
-    }
-  })
+  // const addressArray = originalData.map((data, i) => {
+  //   return {
+  //     key: data.addressLn1 + i,
+  //     value: data.addressLn1,
+  //     label: data.addressLn1
+  //   }
+  // })
 
-  let firstOptions = firstSearchOptions;
+  // let firstOptions = firstSearchOptions;
 
-  searchOne.map(option => {
-    switch (option) {
-    case 'name':
-      firstOptions = namesArray;
-      break;
-    case 'shipperUserId':
-      firstOptions = shipperUserIdArrays;
-      break;
-    case 'addressLn1':
-      firstOptions = addressArray;
-      break;
-    default:
-      firstOptions = firstSearchOptions;
-      break;
-  }
-  })
+  // searchOne.map(option => {
+  //   switch (option) {
+  //   case 'name':
+  //     firstOptions = namesArray;
+  //     break;
+  //   case 'shipperUserId':
+  //     firstOptions = shipperUserIdArrays;
+  //     break;
+  //   case 'addressLn1':
+  //     firstOptions = addressArray;
+  //     break;
+  //   default:
+  //     firstOptions = firstSearchOptions;
+  //     break;
+  // }
+  // })
   
   const onChangeOne = (value: string[]) => {
-    console.log(`selected ${value}`);
-
     setSearchOne(value);
-    // setIsSearchedOne(true)
-
     
     if (searchOne) {
       let searchedResultsOne = [];
@@ -179,18 +202,15 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
 
   };
 
-
-
   // ---- Start: To get initial filtered data (to table) ---------
   useEffect(() => {
     try {
       let count = 0;
       if (receiverOfItemArray) {
-        const fData:ShipmentDataItem[] = [];
-        receiverOfItemArray.forEach((item, i) => {
+        const fData:DataType[] = [];
+        receiverOfItemArray.forEach((item) => {
           const trackingId = item.receiverOfItem.trackingId;
-          // console.log(item.receiverOfItem.trackingId)
-          item.receiverOfItem.shipmentData.forEach((sd, j) => {
+          item.receiverOfItem.shipmentData.forEach((sd: ShipmentDataItem) => {
             count++
             fData.push({...sd, key: count, trackingId});
           });
@@ -198,23 +218,11 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
         setOriginalData(fData);
         setFilteredData(fData);  
 
-        // -----------------
-
-        // if (searchOne) {
-        //   let searchedResultsOne = [];
-        //   searchedResultsOne = originalData.filter(item => {
-        //     return searchOne.some(value => Object.values(item).includes(value));
-            
-        //   });
-        // setFilteredData(searchedResultsOne)
-        // }
       }
     } catch (error) {
       console.log(error);
     }
   }, [receiverOfItemArray, searchQuery]);
-
-
   // ---- End: To get initial filtered data (to table) ---------
 
   const handleSearch = () => {
@@ -227,18 +235,6 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
     setFilteredData(searchedResultsTwo);
   };
 
-  // const handleSearchOne = () => {
-  //   console.log("clicked")
-  //     let searchedResultsOne = [];
-  //     searchedResultsOne = originalData.filter(item => {
-  //       return searchOne.some(value => Object.values(item).includes(value));
-        
-  //     });
-  //   console.log(searchedResultsOne)
-  //     setFilteredData(searchedResultsOne)
-    
-  // }
-
   let result;
 
   switch (table) {
@@ -250,8 +246,8 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
         <MonacoEditor
           height="650"
           language="javascript"
-          theme="vs-light"
-          value={JSON.stringify(originalData, null, 2)}
+          theme="vs-dark"
+          value={JSON.stringify(filteredData, null, 2)}
           options={{
             selectOnLineNumbers: true,
             lineHeight: 22,
@@ -265,20 +261,91 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
   }
   const hasShipperUserId = searchOne.includes('shipperUserId')
 
-  // console.log("--searchOne--");
-  // console.log(searchOne);
+  const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+  };
 
-  // console.log("--originalData--");
-  // console.log(originalData);
-
-  // console.log("--filteredData--");
-  // console.log(filteredData);
-  
+  const [form] = Form.useForm();
   
   return (
     <div>
       <div className='inputs-container'>
-          <Select
+        <div className="select-search-inputs">
+          <div className='each-field'>
+            <Space.Compact >
+              <Select style={{ borderRadius: '0 !important', width: '209px', height: '40px' }} defaultValue="Select" options={firstSearchOptions} />
+              <Input defaultValue="" style={{ width: '357px', height: '40px' }} />
+            </Space.Compact>
+          </div>
+          <div className='each-field'>
+            <Space.Compact>
+              <Select
+                disabled={false}
+                defaultValue="Select"
+                options={secondSearchOptions}
+                style={{ borderRadius: 0, width: '209px', height: '40px' }} />
+              <Input
+                disabled={false}
+                defaultValue=""
+                style={{ width: '357px', height: '40px' }}
+              />
+            </Space.Compact>
+            <div className="form-container-wrapper">
+              <div className='close-btn' style={{ textAlign: 'right' }}><CloseOutlined /></div>  
+              <div className="form-container">
+                <Form
+                  {...layout}
+                  form={form}
+                  name="control-hooks"
+                  // onFinish={onFinish}
+                  style={{ maxWidth: 532, gap: '8px' }}
+                >
+                  <Form.Item name="address Line 1" label="Address Line 1" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="address Line 2" label="Address Line 2" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="city" label="City" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="state" label="State" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name="zipcode" label="Zip code" rules={[{ required: true }]}>
+                    <Input />
+                  </Form.Item>
+                  <div className='form-btns-container'>
+                    <Button
+                      style={{ marginRight: '16px', width: '82px', height: '32px' }}
+                      type="primary" >
+                      Submit
+                    </Button>
+                    <Button
+                      style={{ width: '82px', height: '32px' }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </Form>
+                
+               </div>
+              
+            </div>
+          </div>
+        </div>
+
+        <Divider orientation='right' type='vertical' style={{ height: '110px' }}/>
+
+        <Button
+          style={{ marginTop: '35px', width: '89px', height: '40px' }}
+          type="primary" >
+          Search
+        </Button>
+
+
+          {/* <Select
             className='select-box'
             showSearch
             mode='tags'
@@ -286,8 +353,7 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
             optionFilterProp="children"
             onChange={onChangeOne}
             options={firstOptions}
-            // onSearch={handleSearchOne}
-          />
+        />
 
           <Search
             disabled= {hasShipperUserId}
@@ -296,7 +362,8 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
             onSearch={handleSearch}
             style={{ height: '9px' }}
             onChange={(e) => setSearchQuery(e.target.value)}
-          />  
+        />   */}
+
         
       </div>
 
@@ -307,9 +374,12 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
             <div></div>
             <p>Total Records found {filteredData.length}</p>
           </div>
-          <div className='toggle-container'>
-            <div className={table === 'table' ? `active` : ``} onClick={() => setTable('table')}>Table View</div>
-            <div className={table === 'json' ? `active` : ``} onClick={() => setTable('json')}>JSON View</div>
+          <div className='btns-container'>
+            <div className='toggle-container'>
+              <div className={table === 'table' ? `active` : ``} onClick={() => setTable('table')}>Table View</div>
+              <div className={table === 'json' ? `active` : ``} onClick={() => setTable('json')}>JSON View</div>
+            </div>
+            <div className='clear-btn'>Clear All</div>
           </div>
         </div>
         {result}
@@ -318,5 +388,30 @@ export const SearchUI: React.FC<ResultViewProps> = ({ receiverOfItemArray }) => 
   );
 };
 
-//  * !isSearchedOne ? filteredData : originalData
-//  value={ !isSearchedOne ? (JSON.stringify(filteredData, null, 2)) : (JSON.stringify(originalData, null, 2))}
+
+{/* <form action="">
+      <div>
+        <label>Address Line 1:</label>
+        <input placeholder='Enter address' required />
+      </div>
+      <div>
+        <label>Address Line 2:</label>
+        <input placeholder='Enter address' required  />
+      </div>
+      <div>
+        <label>City:</label>
+        <input placeholder='Enter city' required  />
+      </div>
+      <div>
+        <label>State:</label>
+        <input placeholder='Enter state' required  />
+      </div>
+      <div>
+        <label></label>
+        <input placeholder='Eg:577005' required  />
+      </div>
+      <div>
+        <button type="submit">Submit</button>
+        <button>Cancel</button>
+      </div>
+    </form> */}
